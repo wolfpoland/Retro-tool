@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "tsc -p tsconfig.json && node index.js"
+    "dev": "tsc -p tsconfig.json && node dist/apps/retro-tool-ws/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,7 @@
     "@types/ws": "^8.5.4",
     "typescript": "^5.0.4",
     "@fastify/websocket": "^8.0.0",
+    "rxjs": "^7.8.1",
     "fastify": "^4.17.0"
   }
 }

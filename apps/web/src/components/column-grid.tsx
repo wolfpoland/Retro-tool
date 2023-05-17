@@ -1,14 +1,23 @@
 "use client";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { Column } from "./column";
 import { WsStore } from "@/store/ws-store";
+import { WsObserverContext } from "@/providers/ws";
 
 export const ColumnGrid: FC = () => {
-  const onColumnSubmit = (text: string, columnName: string) => {
-    WsStore.setState((state) => {
-      const messagesToSynchronize = state.messagesToSynchronize;
+  const wsObserver = useContext(WsObserverContext);
 
-      return { messagesToSynchronize: [...state.messagesToSynchronize, text] };
+  const onColumnSubmit = (text: string, columnName: string) => {
+    console.log("submit: ", wsObserver);
+    wsObserver?.emitMessage({
+      id: crypto.randomUUID(),
+      userId: "To implement",
+      type: "NEW_CARD",
+      cargo: {
+        text,
+        columnName,
+        columnId: "To implement",
+      },
     });
   };
 

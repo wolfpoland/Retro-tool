@@ -1,8 +1,17 @@
 "use strict";
 import { fastify } from "fastify";
 import ws from "@fastify/websocket";
+import { Broadcaster } from "./broadcaster/broadcaster";
+import { MessageInterpreter } from "./interpreter/message-interpreter";
+import { Transaction } from "../../packages/types/transaction";
+import { messageHandler } from "./handlers/message-handler";
+import { broadcastHandler } from "./handlers/broadcast-handler";
+import { Subject } from "rxjs";
 
 const server = fastify();
+export const broadcaster: Broadcaster<unknown> = new Broadcaster();
+export const interpreter: MessageInterpreter = new MessageInterpreter();
+export const connectionClosed$: Subject<void> = new Subject();
 
 server.register(ws, {
   options: { maxPayload: 1048576 },
@@ -13,10 +22,19 @@ server.register(async function (fastify) {
     "/*",
     { websocket: true },
     (connection /* SocketStream */, req /* FastifyRequest */) => {
+      broadcastHandler(connection.socket);
+
       connection.socket.on("message", (message) => {
-        // message.toString() === 'hi from client'
-        console.log("new message", message.toString());
-        // connection.socket.send("hi from wildcard route");
+        messageHandler(message);
+      });
+
+      connection.socket.on("open", () => {
+        console.log("connection opened  !");
+      });
+
+      connection.socket.on("close", () => {
+        console.log("connection closed  !");
+        // connectionClosed$.next();
       });
     }
   );

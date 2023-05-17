@@ -1,15 +1,7 @@
-import { createStore, StoreApi } from "zustand/vanilla";
-import { subscribeWithSelector } from "zustand/middleware";
+import { observable } from "@legendapp/state";
 
-type WsApi = {
-  status: "initial" | "open" | "closed" | "error";
-  messagesToSynchronize: string[];
+type WsStoreState = {
+  cards: Array<string>;
 };
 
-export const WsStore: StoreApi<WsApi> = createStore(
-  (setState, getState, store) => ({
-    status: "initial",
-    messagesToSynchronize: [],
-    addMessageToSynchronize: setState((state) => ({})),
-  })
-);
+const obs = observable<WsStoreState>({ cards: [] });
