@@ -1,5 +1,8 @@
+export type ColumnName = "Start" | "Adopt" | "Dont know";
+
 export type Card = {
+  id: string;
   text: string;
-  columnName: string;
+  columnName: ColumnName;
   columnId: string;
 };

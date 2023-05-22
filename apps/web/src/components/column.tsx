@@ -1,20 +1,20 @@
 "use client";
 import React, { FC, useRef } from "react";
+import { Card } from "../../../../packages/types/card";
 
 type ColumnProps = {
-  title: string;
-  onColumnSubmit: (text: string, columnName: string) => void;
+  title: "Start" | "Adopt" | "Dont know";
+  cards: Array<Card>;
+  onColumnSubmit: (
+    text: string,
+    columnName: "Start" | "Adopt" | "Dont know",
+    columnId: string
+  ) => void;
 };
 
-const initialValue = [
-  {
-    type: "paragraph",
-    children: [{ text: "lol" }],
-  },
-];
-
-export const Column: FC<ColumnProps> = ({ title, onColumnSubmit }) => {
+export const Column: FC<ColumnProps> = ({ title, onColumnSubmit, cards }) => {
   const textArea = useRef<HTMLTextAreaElement>(null);
+  const columnId = useRef<string>(crypto.randomUUID());
 
   const handleKeyDownOnTextArea = (
     event: React.KeyboardEvent<HTMLTextAreaElement>
@@ -24,7 +24,7 @@ export const Column: FC<ColumnProps> = ({ title, onColumnSubmit }) => {
 
       if (!textArea.current || !textArea.current.value?.length) return;
 
-      onColumnSubmit(textArea.current.value, title);
+      onColumnSubmit(textArea.current.value, title, columnId.current);
     }
   };
 
@@ -40,15 +40,25 @@ export const Column: FC<ColumnProps> = ({ title, onColumnSubmit }) => {
         </h3>
       </div>
 
-      <div className="p-4 md:p-5 flex-1"></div>
+      <div className="p-4 md:p-5 flex-1">
+        {cards.map((card: Card) => {
+          return (
+            <div
+              key={card.id}
+              className="flex flex-col bg-white border shadow-sm rounded-xl
+              p-4 md:p-5 dark:bg-gray-800 dark:border-gray-700
+              dark:shadow-slate-700/[.7] dark:text-gray-400"
+            >
+              {card.text}
+            </div>
+          );
+        })}
+      </div>
 
       <div
         className="flex-none overflow-y-auto h-[15vh] bg-gray-100 border-t rounded-b-xl py-3 px-4 md:py-4
          md:px-5 dark:bg-gray-800 dark:border-gray-700"
       >
-        {/*<p className='mt-1 text-sm text-gray-500 dark:text-gray-500'>*/}
-        {/*  Write something here*/}
-        {/*</p>*/}
         <textarea
           ref={textArea}
           onKeyDown={handleKeyDownOnTextArea}

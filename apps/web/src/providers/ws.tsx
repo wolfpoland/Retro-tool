@@ -1,17 +1,12 @@
 "use client";
-import {
-  createContext,
-  FC,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { WsStore } from "@/store/ws-store";
+import { createContext, FC, ReactNode, useEffect, useRef } from "react";
 import { Observer } from "@/utils/ws/observer";
 import { Subject, takeUntil } from "rxjs";
 import { Transaction } from "../../../../packages/types/transaction";
 import { Card } from "../../../../packages/types/card";
+import { clientInterpreter } from "@/interpreter/interpreter";
+import { store } from "@/store/store";
+import { Provider } from "react-redux";
 
 export type WsProps = {
   children: ReactNode;
@@ -32,14 +27,10 @@ export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
     };
 
     ws.current.addEventListener("message", (message) => {
-      console.log("Message !", message);
+      clientInterpreter(JSON.parse(message.data));
     });
 
-    ws.current.onclose = () => {
-      WsStore.setState({ status: "closed" });
-    };
-
-    console.log("current: ", writeObserver.current);
+    ws.current.onclose = () => {};
 
     return () => {
       destroy$.current.next();
@@ -48,9 +39,11 @@ export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
   }, []);
   return (
     <>
-      <WsObserverContext.Provider value={writeObserver.current}>
-        {children}
-      </WsObserverContext.Provider>
+      <Provider store={store}>
+        <WsObserverContext.Provider value={writeObserver.current}>
+          {children}
+        </WsObserverContext.Provider>
+      </Provider>
     </>
   );
 };
@@ -70,8 +63,6 @@ function handleWsWrites(
     .observeMessage()
     .pipe(takeUntil(destroy$))
     .subscribe((message: Transaction<Card>) => {
-      console.log("gonna send message!");
       ws.send(JSON.stringify(message));
-      console.log("observer fucking works!");
     });
 }
