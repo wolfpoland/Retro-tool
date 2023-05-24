@@ -1,6 +1,7 @@
 "use client";
 import React, { FC, useRef } from "react";
-import { Card } from "../../../../packages/types/card";
+import { Card } from "../../../../../packages/types/card";
+import { CardComponent } from "@/components/card";
 
 type ColumnProps = {
   title: "Start" | "Adopt" | "Dont know";
@@ -12,7 +13,11 @@ type ColumnProps = {
   ) => void;
 };
 
-export const Column: FC<ColumnProps> = ({ title, onColumnSubmit, cards }) => {
+export const ColumnComponent: FC<ColumnProps> = ({
+  title,
+  onColumnSubmit,
+  cards,
+}) => {
   const textArea = useRef<HTMLTextAreaElement>(null);
   const columnId = useRef<string>(crypto.randomUUID());
 
@@ -41,15 +46,7 @@ export const Column: FC<ColumnProps> = ({ title, onColumnSubmit, cards }) => {
 
       <div className="flex-1 p-4 md:p-5">
         {cards.map((card: Card) => {
-          return (
-            <div
-              key={card.id}
-              className="flex flex-col rounded-xl border bg-white p-4
-              shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400
-              dark:shadow-slate-700/[.7] md:p-5">
-              {card.text}
-            </div>
-          );
+          return <CardComponent key={card.id} card={card} />;
         })}
       </div>
 

@@ -1,13 +1,12 @@
 "use client";
 import { FC, useContext } from "react";
-import { Column } from "./column";
+import { ColumnComponent } from "./column";
 import { WsObserverContext } from "@/providers/ws";
-import { observer } from "@legendapp/state/react";
 import { useSelector } from "react-redux";
 import { columnsSelector } from "@/store/selectors/card.selector";
-import { ColumnName } from "../../../../packages/types/card";
+import { ColumnName } from "../../../../../packages/types/card";
 
-export const ColumnGrid: FC = observer(() => {
+export const ColumnGridComponent: FC = () => {
   const wsObserver = useContext(WsObserverContext);
 
   const columns = useSelector(columnsSelector);
@@ -32,21 +31,21 @@ export const ColumnGrid: FC = observer(() => {
   };
 
   return (
-    <div className="max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6 mx-auto">
-      <div className="mt-12 h-[70vh] grid lg:grid-cols-3 gap-6 lg:items-center">
-        <Column
+    <div className="mx-auto max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6">
+      <div className="mt-12 grid h-[70vh] gap-6 lg:grid-cols-3 lg:items-center">
+        <ColumnComponent
           onColumnSubmit={onColumnSubmit}
           title="Start"
-          cards={columns["Start"] ?? []}></Column>
-        <Column
+          cards={columns["Start"] ?? []}></ColumnComponent>
+        <ColumnComponent
           onColumnSubmit={onColumnSubmit}
           title="Adopt"
-          cards={columns["Adopt"] ?? []}></Column>
-        <Column
+          cards={columns["Adopt"] ?? []}></ColumnComponent>
+        <ColumnComponent
           onColumnSubmit={onColumnSubmit}
           title="Dont know"
-          cards={columns["Dont know"] ?? []}></Column>
+          cards={columns["Dont know"] ?? []}></ColumnComponent>
       </div>
     </div>
   );
-});
+};
