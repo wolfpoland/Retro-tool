@@ -1,1 +1,1 @@
-export type TransactionType = "NEW_CARD";
+export type TransactionType = "NEW_CARD" | "CARD_REMOVE";

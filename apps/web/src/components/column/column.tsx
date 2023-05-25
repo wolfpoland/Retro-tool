@@ -6,17 +6,19 @@ import { CardComponent } from "@/components/card";
 type ColumnProps = {
   title: "Start" | "Adopt" | "Dont know";
   cards: Array<Card>;
-  onColumnSubmit: (
+  onCardAdd: (
     text: string,
     columnName: "Start" | "Adopt" | "Dont know",
     columnId: string
   ) => void;
+  onCardRemove: (card: Card) => void;
 };
 
 export const ColumnComponent: FC<ColumnProps> = ({
   title,
-  onColumnSubmit,
+  onCardAdd,
   cards,
+  onCardRemove,
 }) => {
   const textArea = useRef<HTMLTextAreaElement>(null);
   const columnId = useRef<string>(crypto.randomUUID());
@@ -29,8 +31,13 @@ export const ColumnComponent: FC<ColumnProps> = ({
 
       if (!textArea.current || !textArea.current.value?.length) return;
 
-      onColumnSubmit(textArea.current.value, title, columnId.current);
+      onCardAdd(textArea.current.value, title, columnId.current);
+      textArea.current.value = "";
     }
+  };
+
+  const handleCardRemove = (card: Card) => {
+    onCardRemove(card);
   };
 
   return (
@@ -46,7 +53,13 @@ export const ColumnComponent: FC<ColumnProps> = ({
 
       <div className="flex-1 p-4 md:p-5">
         {cards.map((card: Card) => {
-          return <CardComponent key={card.id} card={card} />;
+          return (
+            <CardComponent
+              onCardRemove={handleCardRemove}
+              key={card.id}
+              card={card}
+            />
+          );
         })}
       </div>
 

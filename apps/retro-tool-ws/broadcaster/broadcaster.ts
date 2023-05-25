@@ -9,7 +9,6 @@ export class Broadcaster<T> {
   }
 
   public emitMessage(message: Transaction<T>) {
-    console.log("emmit", this.message);
     this.message.next(message);
   }
 

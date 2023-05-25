@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { createCardAction } from "@/store/actions/card.action";
+import { createCardAction, setCardsAction } from "@/store/actions/card.action";
 import { Card, ColumnName } from "../../../../../packages/types/card";
 
 type CardState = {
@@ -22,5 +22,17 @@ export const cardReducer = createReducer(initialState, (builder) => {
     prevColumns.push(card);
 
     state.columns[card.columnName] = prevColumns;
+  });
+
+  builder.addCase(setCardsAction, (state, action) => {
+    state.cards = action.payload;
+
+    state.columns = {};
+
+    state.cards.forEach((card) => {
+      const prevColumn = state.columns[card.columnName] || [];
+
+      state.columns[card.columnName] = [...prevColumn, card];
+    });
   });
 });
