@@ -51,7 +51,7 @@ export const ColumnComponent: FC<ColumnProps> = ({
         </h3>
       </div>
 
-      <div className="flex-1 p-4 md:p-5">
+      <div className="h-[60vh] max-h-[60vh] flex-1 overflow-auto p-4 md:p-5">
         {cards.map((card: Card) => {
           return (
             <CardComponent

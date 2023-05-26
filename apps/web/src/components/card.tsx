@@ -13,7 +13,6 @@ export const CardComponent: FC<CardProps> = ({ card, onCardRemove }) => {
   const [styles, setStyles] = useState<string>("");
 
   const handleMouseOver = () => {
-    console.log("mouse overs");
     setMouseOver(true);
   };
 
@@ -41,11 +40,16 @@ export const CardComponent: FC<CardProps> = ({ card, onCardRemove }) => {
               shadow-sm dark:border-gray-600  dark:text-gray-300
               dark:shadow-slate-700/[.7] md:p-5 ${styles}`}>
       <div className="flex items-center justify-end">
-        <div className="flex w-24 items-center justify-between rounded-md border bg-gray-700 px-2 py-1 dark:border-gray-600">
-          <IconComponent iconType={RxPencil1} />
-          <div className="h-4 w-1 border-r-2 border-gray-600"></div>
-          <IconComponent iconType={RxTrash} onIconClick={handleRemoveOnClick} />
-        </div>
+        {mouseOver && (
+          <div className="flex w-24 items-center justify-between rounded-md border bg-gray-700 px-2 py-1 dark:border-gray-600">
+            <IconComponent iconType={RxPencil1} />
+            <div className="h-4 w-1 border-r-2 border-gray-600"></div>
+            <IconComponent
+              iconType={RxTrash}
+              onIconClick={handleRemoveOnClick}
+            />
+          </div>
+        )}
       </div>
 
       {card.text}

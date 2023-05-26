@@ -1,6 +1,10 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { createCardAction, setCardsAction } from "@/store/actions/card.action";
-import { Card, ColumnName } from "../../../../../packages/types/card";
+import {
+  createCardAction,
+  removeCardAction,
+  setCardsAction,
+} from "@/store/actions/card.action";
+import { Card } from "../../../../../packages/types/card";
 
 type CardState = {
   cards: Array<Card>;
@@ -33,6 +37,20 @@ export const cardReducer = createReducer(initialState, (builder) => {
       const prevColumn = state.columns[card.columnName] || [];
 
       state.columns[card.columnName] = [...prevColumn, card];
+    });
+  });
+
+  builder.addCase(removeCardAction, (state, action) => {
+    const card = action.payload;
+
+    state.cards = state.cards.filter((stateCard) => {
+      return stateCard.id !== card.id;
+    });
+
+    const column = state.columns[card.columnName];
+
+    state.columns[card.columnName] = column.filter((stateCard) => {
+      return stateCard.id !== card.id;
     });
   });
 });
