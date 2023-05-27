@@ -1,4 +1,5 @@
 import React, { FC, ReactNode } from "react";
+import Link from "next/link";
 
 type NavbarProps = {
   children: ReactNode;
@@ -51,27 +52,19 @@ export const NavbarComponent: FC<NavbarProps> = ({ children }): JSX.Element => {
             id="navbar-collapse-with-animation"
             className="hs-collapse hidden grow basis-full overflow-hidden transition-all duration-300 sm:block">
             <div className="mt-5 flex flex-col gap-x-0 gap-y-4 sm:mt-0 sm:flex-row sm:items-center sm:justify-end sm:gap-x-7 sm:gap-y-0 sm:pl-7">
-              <a
+              <Link
                 className="font-semibold text-gray-500 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 sm:py-6"
-                href="#"
+                href="workspace"
                 aria-current="page">
-                Landing
-              </a>
-              <a
+                Workspace
+              </Link>
+
+              <Link
                 className="font-semibold text-gray-500 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 sm:py-6"
-                href="#">
-                Account
-              </a>
-              <a
-                className="font-semibold text-gray-500 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 sm:py-6"
-                href="#">
-                Work
-              </a>
-              <a
-                className="font-semibold text-gray-500 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 sm:py-6"
-                href="#">
-                Blog
-              </a>
+                href="example-workspace"
+                aria-current="page">
+                Example workspace
+              </Link>
 
               <div className="hs-dropdown [--adaptive:none] [--strategy:static] sm:py-4 sm:[--strategy:fixed] sm:[--trigger:hover]">
                 <button

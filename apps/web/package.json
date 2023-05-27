@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "4.14.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.1.0",
     "@types/react": "18.2.6",
@@ -30,9 +31,10 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@upstash/redis": "^1.20.6",
+    "dotenv": "^16.0.3",
     "prettier": "^2.8.6",
     "prettier-plugin-tailwindcss": "^0.2.6",
-    "@upstash/redis": "^1.20.6",
-    "dotenv": "^16.0.3"
+    "prisma": "4.14.1"
   }
 }
