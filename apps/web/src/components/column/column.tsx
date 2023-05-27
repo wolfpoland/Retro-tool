@@ -2,6 +2,7 @@
 import React, { FC, useRef } from "react";
 import { Card } from "../../../../../packages/types/card";
 import { CardComponent } from "@/components/card";
+import { TextareaComponent } from "@/components/ui/textarea";
 
 type ColumnProps = {
   title: "Start" | "Adopt" | "Dont know";
@@ -12,6 +13,7 @@ type ColumnProps = {
     columnId: string
   ) => void;
   onCardRemove: (card: Card) => void;
+  onCardEdit: (card: Card) => void;
 };
 
 export const ColumnComponent: FC<ColumnProps> = ({
@@ -19,6 +21,7 @@ export const ColumnComponent: FC<ColumnProps> = ({
   onCardAdd,
   cards,
   onCardRemove,
+  onCardEdit,
 }) => {
   const textArea = useRef<HTMLTextAreaElement>(null);
   const columnId = useRef<string>(crypto.randomUUID());
@@ -40,6 +43,10 @@ export const ColumnComponent: FC<ColumnProps> = ({
     onCardRemove(card);
   };
 
+  const handleCardEdit = (card: Card) => {
+    onCardEdit(card);
+  };
+
   return (
     <div
       className="flex h-full flex-col rounded-xl border bg-white
@@ -56,6 +63,7 @@ export const ColumnComponent: FC<ColumnProps> = ({
           return (
             <CardComponent
               onCardRemove={handleCardRemove}
+              onCardEdit={handleCardEdit}
               key={card.id}
               card={card}
             />
@@ -66,15 +74,11 @@ export const ColumnComponent: FC<ColumnProps> = ({
       <div
         className="h-[15vh] flex-none overflow-y-auto rounded-b-xl border-t bg-gray-100 px-4 py-3 dark:border-gray-700
          dark:bg-gray-800 md:px-5 md:py-4">
-        <textarea
-          ref={textArea}
-          onKeyDown={handleKeyDownOnTextArea}
-          className="block w-full resize-none rounded-md border-gray-200 px-4 py-1
-           text-sm focus:border-blue-500 focus:ring-blue-500
-            dark:border-gray-700
-            dark:bg-slate-900 dark:text-gray-400"
-          placeholder="Write somethig here"
-          rows={3}></textarea>
+        <TextareaComponent
+          textAreaRef={textArea}
+          handleKeyDownOnTextArea={handleKeyDownOnTextArea}
+          className="mb-2"
+        />
       </div>
     </div>
   );

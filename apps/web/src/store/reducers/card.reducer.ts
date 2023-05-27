@@ -1,6 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
   createCardAction,
+  editCardAction,
   removeCardAction,
   setCardsAction,
 } from "@/store/actions/card.action";
@@ -51,6 +52,28 @@ export const cardReducer = createReducer(initialState, (builder) => {
 
     state.columns[card.columnName] = column.filter((stateCard) => {
       return stateCard.id !== card.id;
+    });
+  });
+
+  builder.addCase(editCardAction, (state, action) => {
+    const card = action.payload;
+
+    state.cards = state.cards.map((stateCard) => {
+      if (stateCard.id === card.id) {
+        return card;
+      } else {
+        return stateCard;
+      }
+    });
+
+    const column = state.columns[card.columnName];
+
+    state.columns[card.columnName] = column.map((stateCard) => {
+      if (stateCard.id === card.id) {
+        return card;
+      } else {
+        return stateCard;
+      }
     });
   });
 });

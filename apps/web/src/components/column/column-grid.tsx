@@ -52,22 +52,36 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     });
   };
 
+  const handleCardEdit = (card: Card) => {
+    wsObserver?.emitMessage({
+      id: crypto.randomUUID(),
+      userId: "To implement",
+      type: "CARD_EDIT",
+      cargo: {
+        ...card,
+      },
+    });
+  };
+
   return (
     <div className="mx-auto h-[110vh] max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6">
       <div className="mt-12 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center">
         <ColumnComponent
           onCardAdd={onCardAdd}
           onCardRemove={handleCardRemove}
+          onCardEdit={handleCardEdit}
           title="Start"
           cards={columns["Start"] ?? []}></ColumnComponent>
         <ColumnComponent
           onCardAdd={onCardAdd}
           onCardRemove={handleCardRemove}
+          onCardEdit={handleCardEdit}
           title="Adopt"
           cards={columns["Adopt"] ?? []}></ColumnComponent>
         <ColumnComponent
           onCardAdd={onCardAdd}
           onCardRemove={handleCardRemove}
+          onCardEdit={handleCardEdit}
           title="Dont know"
           cards={columns["Dont know"] ?? []}></ColumnComponent>
       </div>

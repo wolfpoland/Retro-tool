@@ -4,6 +4,7 @@ import { Card } from "../../../../packages/types/card";
 import { store } from "@/store/store";
 import {
   createCardAction,
+  editCardAction,
   removeCardAction,
 } from "@/store/actions/card.action";
 
@@ -16,6 +17,11 @@ export function clientInterpreter(transaction: Transaction<unknown>) {
 
     case "CARD_REMOVE": {
       store.dispatch(removeCardAction(transaction.cargo as Card));
+      break;
+    }
+
+    case "CARD_EDIT": {
+      store.dispatch(editCardAction(transaction.cargo as Card));
       break;
     }
   }

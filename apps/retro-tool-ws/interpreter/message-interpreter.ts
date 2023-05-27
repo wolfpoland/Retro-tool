@@ -2,6 +2,7 @@ import { Transaction } from "../../../packages/types/transaction";
 import { newCard } from "./handlers/new-card";
 import { Card } from "../../../packages/types/card";
 import { removeCard } from "./handlers/remove-card";
+import { editCard } from "./handlers/edit-card";
 
 // implement zod here
 export class MessageInterpreter {
@@ -14,6 +15,11 @@ export class MessageInterpreter {
 
       case "CARD_REMOVE": {
         removeCard(transaction as Transaction<Card>);
+        break;
+      }
+
+      case "CARD_EDIT": {
+        editCard(transaction as Transaction<Card>);
         break;
       }
 
