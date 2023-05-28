@@ -7,6 +7,7 @@ import { columnsSelector } from "@/store/selectors/card.selector";
 import { Card, ColumnName } from "../../../../../packages/types/card";
 import { store } from "@/store/store";
 import { setCardsAction } from "@/store/actions/card.action";
+import { cn } from "@/utils/util";
 
 export type ColumnGridComponentProps = {
   cards: Array<Card>;
@@ -64,8 +65,14 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   return (
-    <div className="mx-auto h-[110vh] max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6">
-      <div className="mt-12 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center">
+    <div
+      className={cn(
+        "mx-auto h-[110vh] max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6"
+      )}>
+      <div
+        className={cn(
+          "mt-12 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center"
+        )}>
         <ColumnComponent
           onCardAdd={onCardAdd}
           onCardRemove={handleCardRemove}
