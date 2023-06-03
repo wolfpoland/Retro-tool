@@ -1,5 +1,5 @@
 "use client";
-import { Workspace } from "../../../../../packages/types/workspace";
+import { Workspace } from "../../../../../../packages/types/workspace";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -9,11 +9,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/dropdown-menu";
+import Link from "next/link";
 
 export const columns: ColumnDef<Workspace>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => {
+      return (
+        <Link href={`/workspace/${row.original.id}`}>{row.original.name}</Link>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
@@ -25,6 +31,7 @@ export const columns: ColumnDef<Workspace>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const payment = row.original;
 

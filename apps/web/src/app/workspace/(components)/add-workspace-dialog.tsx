@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { handleAddWorkspace } from "@/api-calls/workspace";
 
 export type AddWorkspaceDialogProps = {
   onSubmitWorkingDialog: (workspaceName: string) => void;
@@ -22,18 +23,6 @@ export type AddWorkspaceDialogProps = {
 const formSchema = z.object({
   name: z.string().min(2).max(15),
 });
-
-async function handleAddWorkspace(name: string) {
-  await fetch(`/api/add-workspace`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name,
-    }),
-  });
-}
 
 export const AddWorkspaceDialog: FC<AddWorkspaceDialogProps> = ({
   onSubmitWorkingDialog,

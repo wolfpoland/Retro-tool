@@ -1,9 +1,9 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import { cardReducer } from "@/store/reducers/card.reducer";
+import { workspaceReducer } from "@/store/reducers/workspace.reducer";
 
 export const store = configureStore({
   reducer: {
-    cardState: cardReducer,
+    workspaceState: workspaceReducer,
   },
 });
 

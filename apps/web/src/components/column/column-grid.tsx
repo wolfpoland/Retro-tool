@@ -4,30 +4,33 @@ import { ColumnComponent } from "./column";
 import { WsObserverContext } from "@/providers/ws";
 import { useSelector } from "react-redux";
 import { columnsSelector } from "@/store/selectors/card.selector";
-import { Card, ColumnName } from "../../../../../packages/types/card";
+import { Card } from "../../../../../packages/types/card";
 import { store } from "@/store/store";
-import { setCardsAction } from "@/store/actions/card.action";
+import { setColumns } from "@/store/actions/workspace.action";
 import { cn } from "@/utils/util";
+import { Column } from "../../../../../packages/types/column";
+import { handleAddCards } from "@/api-calls/card";
+
+export type ColumnMap = {
+  [key: string]: Column;
+};
 
 export type ColumnGridComponentProps = {
-  cards: Array<Card>;
+  cards?: Array<Card>;
+  columnHash: ColumnMap;
 };
 
 export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
-  cards,
+  columnHash,
 }) => {
   const wsObserver = useContext(WsObserverContext);
   const columns = useSelector(columnsSelector);
 
   useEffect(() => {
-    store.dispatch(setCardsAction(cards));
-  }, [cards]);
+    store.dispatch(setColumns(columnHash));
+  }, [columnHash]);
 
-  const onCardAdd = (
-    text: string,
-    columnName: ColumnName,
-    columnId: string
-  ) => {
+  const onCardAdd = (text: string, columnName: string, columnId: string) => {
     // these should be only cargo
     wsObserver?.emitMessage({
       id: crypto.randomUUID(),
@@ -40,6 +43,8 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
         columnId,
       },
     });
+
+    handleAddCards(text, columnId);
   };
 
   const handleCardRemove = (card: Card) => {
@@ -64,6 +69,22 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     });
   };
 
+  const generatedColumns = Object.keys(columns).map((key) => {
+    const column = columns[key];
+
+    return (
+      <ColumnComponent
+        key={key}
+        columnId={column.id}
+        onCardAdd={onCardAdd}
+        onCardRemove={handleCardRemove}
+        onCardEdit={handleCardEdit}
+        title={column.name}
+        cards={column.card ?? []}
+      />
+    );
+  });
+
   return (
     <div
       className={cn(
@@ -73,24 +94,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
         className={cn(
           "mt-12 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center"
         )}>
-        <ColumnComponent
-          onCardAdd={onCardAdd}
-          onCardRemove={handleCardRemove}
-          onCardEdit={handleCardEdit}
-          title="Start"
-          cards={columns["Start"] ?? []}></ColumnComponent>
-        <ColumnComponent
-          onCardAdd={onCardAdd}
-          onCardRemove={handleCardRemove}
-          onCardEdit={handleCardEdit}
-          title="Adopt"
-          cards={columns["Adopt"] ?? []}></ColumnComponent>
-        <ColumnComponent
-          onCardAdd={onCardAdd}
-          onCardRemove={handleCardRemove}
-          onCardEdit={handleCardEdit}
-          title="Dont know"
-          cards={columns["Dont know"] ?? []}></ColumnComponent>
+        {generatedColumns}
       </div>
     </div>
   );

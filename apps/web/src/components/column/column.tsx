@@ -6,26 +6,23 @@ import { TextareaComponent } from "@/components/ui/textarea";
 import { cn } from "@/utils/util";
 
 type ColumnProps = {
-  title: "Start" | "Adopt" | "Dont know";
+  title: string;
+  columnId: string;
   cards: Array<Card>;
-  onCardAdd: (
-    text: string,
-    columnName: "Start" | "Adopt" | "Dont know",
-    columnId: string
-  ) => void;
+  onCardAdd: (text: string, columnName: string, columnId: string) => void;
   onCardRemove: (card: Card) => void;
   onCardEdit: (card: Card) => void;
 };
 
 export const ColumnComponent: FC<ColumnProps> = ({
   title,
+  columnId,
   onCardAdd,
   cards,
   onCardRemove,
   onCardEdit,
 }) => {
   const textArea = useRef<HTMLTextAreaElement>(null);
-  const columnId = useRef<string>(crypto.randomUUID());
 
   const handleKeyDownOnTextArea = (
     event: React.KeyboardEvent<HTMLTextAreaElement>
@@ -35,7 +32,7 @@ export const ColumnComponent: FC<ColumnProps> = ({
 
       if (!textArea.current || !textArea.current.value?.length) return;
 
-      onCardAdd(textArea.current.value, title, columnId.current);
+      onCardAdd(textArea.current.value, title, columnId);
       textArea.current.value = "";
     }
   };

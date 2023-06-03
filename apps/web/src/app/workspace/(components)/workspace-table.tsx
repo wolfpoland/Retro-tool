@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { AddWorkspaceDialog } from "@/app/workspace/(components)/add-workspace-dialog";
 import { DataTable } from "@/components/table/data-table";
-import { columns } from "@/app/workspace/columns";
+import { columns } from "@/app/workspace/(components)/columns";
 import { FC, useState } from "react";
 import { Workspace } from "../../../../../../packages/types/workspace";
 import { TableEmptyInfo } from "@/components/table/ui/table-empty-info";

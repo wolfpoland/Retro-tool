@@ -1,44 +1,38 @@
-import { createReducer } from "@reduxjs/toolkit";
+"use client";
+import { createReducer, current } from "@reduxjs/toolkit";
 import {
   createCardAction,
   editCardAction,
   removeCardAction,
-  setCardsAction,
-} from "@/store/actions/card.action";
+  setColumns,
+} from "@/store/actions/workspace.action";
 import { Card } from "../../../../../packages/types/card";
+import { ColumnMap } from "@/components/column/column-grid";
 
 type CardState = {
   cards: Array<Card>;
-  columns: { [columnName: string]: Array<Card> };
+  columnMap: ColumnMap;
 };
 
 const initialState: CardState = {
   cards: [],
-  columns: {},
+  columnMap: {},
 };
 
-export const cardReducer = createReducer(initialState, (builder) => {
+export const workspaceReducer = createReducer(initialState, (builder) => {
   builder.addCase(createCardAction, (state, action) => {
-    state.cards.push(action.payload);
     const card: Card = action.payload;
+    state.cards.push(action.payload);
 
-    const prevColumns = state.columns[card.columnName] || [];
+    const prevColumns = state.columnMap[card.columnId];
 
-    prevColumns.push(card);
+    prevColumns.card.push(card);
 
-    state.columns[card.columnName] = prevColumns;
+    state.columnMap[card.columnId] = prevColumns;
   });
 
-  builder.addCase(setCardsAction, (state, action) => {
-    state.cards = action.payload;
-
-    state.columns = {};
-
-    state.cards.forEach((card) => {
-      const prevColumn = state.columns[card.columnName] || [];
-
-      state.columns[card.columnName] = [...prevColumn, card];
-    });
+  builder.addCase(setColumns, (state, action) => {
+    state.columnMap = action.payload;
   });
 
   builder.addCase(removeCardAction, (state, action) => {
@@ -48,9 +42,9 @@ export const cardReducer = createReducer(initialState, (builder) => {
       return stateCard.id !== card.id;
     });
 
-    const column = state.columns[card.columnName];
+    const column = state.columnMap[card.columnName];
 
-    state.columns[card.columnName] = column.filter((stateCard) => {
+    state.columnMap[card.columnName].card = column.card.filter((stateCard) => {
       return stateCard.id !== card.id;
     });
   });
@@ -66,9 +60,9 @@ export const cardReducer = createReducer(initialState, (builder) => {
       }
     });
 
-    const column = state.columns[card.columnName];
+    const column = state.columnMap[card.columnName];
 
-    state.columns[card.columnName] = column.map((stateCard) => {
+    state.columnMap[card.columnName].card = column.card.map((stateCard) => {
       if (stateCard.id === card.id) {
         return card;
       } else {
