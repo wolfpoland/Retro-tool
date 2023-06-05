@@ -1,6 +1,6 @@
 import { Transaction } from "../../../packages/types/transaction";
 import { newCard } from "./handlers/new-card";
-import { Card } from "../../../packages/types/card";
+import { Card, createCard } from "../../../packages/types/card";
 import { removeCard } from "./handlers/remove-card";
 import { editCard } from "./handlers/edit-card";
 
@@ -9,17 +9,26 @@ export class MessageInterpreter {
   interpret(transaction: Transaction<unknown>): void {
     switch (transaction.type) {
       case "NEW_CARD": {
-        newCard(transaction as Transaction<Card>);
+        newCard({
+          ...transaction,
+          cargo: createCard(transaction.cargo as Card),
+        });
         break;
       }
 
       case "CARD_REMOVE": {
-        removeCard(transaction as Transaction<Card>);
+        removeCard({
+          ...transaction,
+          cargo: createCard(transaction.cargo as Card),
+        });
         break;
       }
 
       case "CARD_EDIT": {
-        editCard(transaction as Transaction<Card>);
+        editCard({
+          ...transaction,
+          cargo: createCard(transaction.cargo as Card),
+        });
         break;
       }
 

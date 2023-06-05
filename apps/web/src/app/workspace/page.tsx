@@ -13,7 +13,7 @@ const getWorkspaces = async (): Promise<Array<WorkspaceModel>> => {
     return {
       id: data.id.toString(),
       name: data.name,
-      columns: [],
+      column: [],
       updatedAt: "",
       createdAt: "",
     } as WorkspaceModel;

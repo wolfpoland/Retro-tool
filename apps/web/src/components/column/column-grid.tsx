@@ -4,12 +4,12 @@ import { ColumnComponent } from "./column";
 import { WsObserverContext } from "@/providers/ws";
 import { useSelector } from "react-redux";
 import { columnsSelector } from "@/store/selectors/card.selector";
-import { Card } from "../../../../../packages/types/card";
+import { Card, createCard } from "../../../../../packages/types/card";
 import { store } from "@/store/store";
 import { setColumns } from "@/store/actions/workspace.action";
 import { cn } from "@/utils/util";
 import { Column } from "../../../../../packages/types/column";
-import { handleAddCards } from "@/api-calls/card";
+import { ClientCalls } from "../../client-calls";
 
 export type ColumnMap = {
   [key: string]: Column;
@@ -30,24 +30,30 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     store.dispatch(setColumns(columnHash));
   }, [columnHash]);
 
-  const onCardAdd = (text: string, columnName: string, columnId: string) => {
-    // these should be only cargo
+  const onCardAdd = async (
+    text: string,
+    columnName: string,
+    columnId: string
+  ) => {
+    const id = await ClientCalls.addCard(text, columnId);
+
+    const card = createCard({
+      id,
+      text,
+      columnId: parseInt(columnId),
+    });
+
     wsObserver?.emitMessage({
       id: crypto.randomUUID(),
       userId: "To implement",
       type: "NEW_CARD",
-      cargo: {
-        id: crypto.randomUUID(),
-        text,
-        columnName,
-        columnId,
-      },
+      cargo: card,
     });
-
-    handleAddCards(text, columnId);
   };
 
   const handleCardRemove = (card: Card) => {
+    ClientCalls.deleteCard(card.id);
+
     wsObserver?.emitMessage({
       id: crypto.randomUUID(),
       userId: "To implement",
@@ -59,6 +65,8 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   const handleCardEdit = (card: Card) => {
+    ClientCalls.updateCard(card);
+
     wsObserver?.emitMessage({
       id: crypto.randomUUID(),
       userId: "To implement",

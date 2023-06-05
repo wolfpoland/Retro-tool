@@ -1,9 +1,10 @@
 "use client";
 import React, { FC, useRef } from "react";
-import { Card } from "../../../../../packages/types/card";
+
 import { CardComponent } from "@/components/card";
 import { TextareaComponent } from "@/components/ui/textarea";
 import { cn } from "@/utils/util";
+import { Card } from "../../../../../packages/types/card";
 
 type ColumnProps = {
   title: string;

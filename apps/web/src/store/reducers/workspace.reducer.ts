@@ -42,9 +42,9 @@ export const workspaceReducer = createReducer(initialState, (builder) => {
       return stateCard.id !== card.id;
     });
 
-    const column = state.columnMap[card.columnName];
+    const column = state.columnMap[card.columnId];
 
-    state.columnMap[card.columnName].card = column.card.filter((stateCard) => {
+    state.columnMap[card.columnId].card = column.card.filter((stateCard) => {
       return stateCard.id !== card.id;
     });
   });
@@ -60,9 +60,9 @@ export const workspaceReducer = createReducer(initialState, (builder) => {
       }
     });
 
-    const column = state.columnMap[card.columnName];
+    const column = state.columnMap[card.columnId];
 
-    state.columnMap[card.columnName].card = column.card.map((stateCard) => {
+    state.columnMap[card.columnId].card = column.card.map((stateCard) => {
       if (stateCard.id === card.id) {
         return card;
       } else {

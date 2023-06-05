@@ -6,7 +6,7 @@ export type Workspace = {
   // description: string;
   createdAt: string;
   updatedAt: string;
-  columns: Column[];
+  column: Column[];
   // Todo: ADD MEMBERS
   // Todo: ADD admin
 };

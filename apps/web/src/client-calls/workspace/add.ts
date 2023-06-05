@@ -1,4 +1,4 @@
-export async function handleAddWorkspace(name: string) {
+export async function addWorkspace(name: string) {
   await fetch(`/api/add-workspace`, {
     method: "POST",
     headers: {
