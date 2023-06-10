@@ -1,22 +1,22 @@
-import { Workspace as WorkspaceModel } from "../../../../../packages/types/workspace";
+import {
+  createWorkspace,
+  Workspace,
+} from "../../../../../packages/types/workspace";
 import { WorkspaceTable } from "@/app/workspace/(components)/workspace-table";
 import prisma from "@/utils/prisma";
 
-const getWorkspaces = async (): Promise<Array<WorkspaceModel>> => {
-  const workspaces = await prisma.workspace.findMany({
-    include: {
-      column: true,
-    },
-  });
+const getWorkspaces = async (): Promise<Array<Workspace>> => {
+  const workspaces = await prisma.workspace.findMany({});
 
   return workspaces.map((data) => {
-    return {
-      id: data.id.toString(),
+    return createWorkspace({
+      id: data.id,
       name: data.name,
       column: [],
       updatedAt: "",
       createdAt: "",
-    } as WorkspaceModel;
+      status: "CREATING_CARDS",
+    });
   });
 };
 

@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { AddWorkspaceDialog } from "@/app/workspace/(components)/add-workspace-dialog";
+import { AddWorkspaceDialog } from "@/app/workspace/(components)/dialog/add-workspace-dialog";
 import { DataTable } from "@/components/table/data-table";
 import { columns } from "@/app/workspace/(components)/columns";
 import { FC, useState } from "react";

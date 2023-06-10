@@ -1,5 +1,5 @@
-import { getWorkspaceColumnHash } from "@/server-calls/workspace/get";
+import { getWorkspaceWithColumMap } from "@/server-calls/workspace/get";
 
 export const ServerCalls = {
-  getWorkspaceColumnHash,
+  getWorkspaceColumnHash: getWorkspaceWithColumMap,
 };

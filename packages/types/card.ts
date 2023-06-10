@@ -6,14 +6,14 @@ export type Card = {
   columnId: number;
 };
 
-export const createCard = (rawCard: Card) => {
-  const schema = z.object({
-    id: z.number(),
-    text: z.string(),
-    columnId: z.number(),
-  });
+export const CardSchema = z.object({
+  id: z.number(),
+  text: z.string(),
+  columnId: z.number(),
+});
 
-  schema.parse(rawCard);
+export const createCard = (rawCard: Card) => {
+  CardSchema.parse(rawCard);
 
   return rawCard as Card;
 };

@@ -6,10 +6,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/dropdown-menu";
 import Link from "next/link";
+import { EditWorkspaceDialog } from "@/app/workspace/(components)/dialog/edit/edit-workspace-dialog";
+
+// const onDropdownMenuClick = (event: React.MouseEvent) => {
+//   event.preventDefault();
+//   console.log("onOpenMenuClikck", event);
+// };
 
 export const columns: ColumnDef<Workspace>[] = [
   {
@@ -33,28 +38,20 @@ export const columns: ColumnDef<Workspace>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const payment = row.original;
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            {/*<Button variant="ghost" className="h-8 w-8 p-0">*/}
-            {/*  <span className="sr-only">Open menu</span>*/}
-            {/*  <MoreHorizontal className="h-4 w-4" />*/}
-            {/*</Button>*/}
-            <button> Open menu</button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button>Open menu</button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem asChild>
+                <EditWorkspaceDialog />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
       );
     },
   },
