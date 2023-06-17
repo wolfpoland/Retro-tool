@@ -33,7 +33,7 @@ export const WorkspaceTable: FC<WorkspaceTableProps> = ({ workspaces }) => {
   return (
     <TableWrapper
       buttons={
-        <Dialog open={dialogOpen}>
+        <Dialog onOpenChange={setDialogOpen} open={dialogOpen}>
           <DialogTrigger asChild onClick={onClick}>
             <Button>Create Workspace</Button>
           </DialogTrigger>

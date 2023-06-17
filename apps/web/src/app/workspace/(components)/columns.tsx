@@ -1,20 +1,8 @@
 "use client";
 import { Workspace } from "../../../../../../packages/types/workspace";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/dropdown-menu";
 import Link from "next/link";
-import { EditWorkspaceDialog } from "@/app/workspace/(components)/dialog/edit/edit-workspace-dialog";
-
-// const onDropdownMenuClick = (event: React.MouseEvent) => {
-//   event.preventDefault();
-//   console.log("onOpenMenuClikck", event);
-// };
+import { ColumnsActions } from "@/app/workspace/(components)/columns-actions";
 
 export const columns: ColumnDef<Workspace>[] = [
   {
@@ -38,21 +26,7 @@ export const columns: ColumnDef<Workspace>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button>Open menu</button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem asChild>
-                <EditWorkspaceDialog />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      );
+      return <ColumnsActions />;
     },
   },
 ];
