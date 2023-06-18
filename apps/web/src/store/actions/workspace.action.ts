@@ -1,10 +1,10 @@
 import { createAction } from "@reduxjs/toolkit";
-import { Card } from "../../../../../packages/types/card";
-import { ColumnMap } from "@/components/column/column-grid";
+import { Workspace } from "../../../../../packages/types/workspace";
 
-export const createCardAction = createAction<Card>("workspace/createCard");
+export const setWorkspaces = createAction<Array<Workspace>>(
+  "workspace/setWorkspaces"
+);
 
-export const removeCardAction = createAction<Card>("workspace/removeCard");
-export const editCardAction = createAction<Card>("workspace/editCard");
-
-export const setColumns = createAction<ColumnMap>("workspace/setColumn");
+export const optimisticRemoveWorkspace = createAction<number>(
+  "workspace/optimisticRemoveWorkspace"
+);

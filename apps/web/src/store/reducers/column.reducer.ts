@@ -5,24 +5,21 @@ import {
   editCardAction,
   removeCardAction,
   setColumns,
-} from "@/store/actions/workspace.action";
+} from "@/store/actions/column.action";
 import { Card } from "../../../../../packages/types/card";
 import { ColumnMap } from "@/components/column/column-grid";
 
-type CardState = {
-  cards: Array<Card>;
+type ColumnState = {
   columnMap: ColumnMap;
 };
 
-const initialState: CardState = {
-  cards: [],
+const initialState: ColumnState = {
   columnMap: {},
 };
 
-export const workspaceReducer = createReducer(initialState, (builder) => {
+export const columnReducer = createReducer(initialState, (builder) => {
   builder.addCase(createCardAction, (state, action) => {
     const card: Card = action.payload;
-    state.cards.push(action.payload);
 
     const prevColumns = state.columnMap[card.columnId];
 
@@ -38,10 +35,6 @@ export const workspaceReducer = createReducer(initialState, (builder) => {
   builder.addCase(removeCardAction, (state, action) => {
     const card = action.payload;
 
-    state.cards = state.cards.filter((stateCard) => {
-      return stateCard.id !== card.id;
-    });
-
     const column = state.columnMap[card.columnId];
 
     state.columnMap[card.columnId].card = column.card.filter((stateCard) => {
@@ -51,14 +44,6 @@ export const workspaceReducer = createReducer(initialState, (builder) => {
 
   builder.addCase(editCardAction, (state, action) => {
     const card = action.payload;
-
-    state.cards = state.cards.map((stateCard) => {
-      if (stateCard.id === card.id) {
-        return card;
-      } else {
-        return stateCard;
-      }
-    });
 
     const column = state.columnMap[card.columnId];
 

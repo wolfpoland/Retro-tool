@@ -7,12 +7,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { forwardRef, MouseEventHandler, useState } from "react";
 import { DropdownMenuItem } from "@/components/dropdown-menu";
+import { Workspace } from "../../../../../../../packages/types/workspace";
 
-export const RemoveWorkspaceAlert = forwardRef(function RemoveWorkspaceAlert() {
+export type RemoveWorkspaceAlertProps = {
+  workspace: Workspace;
+  onDelete: (workspace: Workspace) => void;
+};
+
+export const RemoveWorkspaceAlert = forwardRef(function RemoveWorkspaceAlert(
+  { workspace, onDelete }: RemoveWorkspaceAlertProps,
+  ref
+) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const onClick: MouseEventHandler<unknown> = (event) => {
@@ -23,6 +31,15 @@ export const RemoveWorkspaceAlert = forwardRef(function RemoveWorkspaceAlert() {
   const onOpenChange = (open: boolean) => {
     if (!open) {
     }
+  };
+
+  const onSubmitWorkingDialog = () => {
+    onDelete(workspace);
+    setDialogOpen(false);
+  };
+
+  const onCancel = () => {
+    setDialogOpen(false);
   };
 
   return (
@@ -37,8 +54,10 @@ export const RemoveWorkspaceAlert = forwardRef(function RemoveWorkspaceAlert() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onSubmitWorkingDialog}>
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

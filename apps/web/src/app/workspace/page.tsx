@@ -2,8 +2,8 @@ import {
   createWorkspace,
   Workspace,
 } from "../../../../../packages/types/workspace";
-import { WorkspaceTable } from "@/app/workspace/(components)/workspace-table";
 import prisma from "@/utils/prisma";
+import { WorkspaceTableWrapper } from "@/app/workspace/(components)/workspace-table-wrapper";
 
 const getWorkspaces = async (): Promise<Array<Workspace>> => {
   const workspaces = await prisma.workspace.findMany({});
@@ -23,9 +23,5 @@ const getWorkspaces = async (): Promise<Array<Workspace>> => {
 export default async function Workspace() {
   const workspaces = await getWorkspaces();
 
-  return (
-    <div>
-      <WorkspaceTable workspaces={workspaces} />
-    </div>
-  );
+  return <WorkspaceTableWrapper workspaces={workspaces} />;
 }

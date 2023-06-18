@@ -6,7 +6,7 @@ import {
   createCardAction,
   editCardAction,
   removeCardAction,
-} from "@/store/actions/workspace.action";
+} from "@/store/actions/column.action";
 
 export function clientInterpreter(transaction: Transaction<unknown>) {
   switch (transaction.type) {

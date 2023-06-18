@@ -26,7 +26,7 @@ export const columns: ColumnDef<Workspace>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      return <ColumnsActions />;
+      return <ColumnsActions workspace={row.original} />;
     },
   },
 ];

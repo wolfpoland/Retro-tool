@@ -3,10 +3,10 @@ import { FC, useContext, useEffect } from "react";
 import { ColumnComponent } from "./column";
 import { WsObserverContext } from "@/providers/ws";
 import { useSelector } from "react-redux";
-import { columnsSelector } from "@/store/selectors/card.selector";
+import { columnsSelector } from "@/store/selectors/column.selector";
 import { Card, createCard } from "../../../../../packages/types/card";
 import { store } from "@/store/store";
-import { setColumns } from "@/store/actions/workspace.action";
+import { setColumns } from "@/store/actions/column.action";
 import { cn } from "@/utils/util";
 import { Column } from "../../../../../packages/types/column";
 import { ClientCalls } from "../../client-calls";
@@ -16,7 +16,6 @@ export type ColumnMap = {
 };
 
 export type ColumnGridComponentProps = {
-  cards?: Array<Card>;
   columnHash: ColumnMap;
 };
 

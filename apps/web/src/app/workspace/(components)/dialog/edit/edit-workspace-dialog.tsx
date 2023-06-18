@@ -40,7 +40,7 @@ export const EditWorkspaceDialog: FC<EditWorkspaceDialogProps> = forwardRef(
 
     return (
       <Dialog onOpenChange={onOpenChange} open={dialogOpen}>
-        <DropdownMenuItem onClick={onClick}>Edit workspace</DropdownMenuItem>
+        <DropdownMenuItem onClick={onClick}>Edit</DropdownMenuItem>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit workspace</DialogTitle>

@@ -1,11 +1,11 @@
-export async function addWorkspace(name: string) {
-  await fetch(`/api/workspace/add-workspace`, {
+export async function deleteWorkspace(id: number) {
+  await fetch(`/api/workspace/delete-workspace`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      name,
+      id,
     }),
   });
 }

@@ -1,4 +1,5 @@
 "use client";
+
 import { TableWrapper } from "@/components/table/ui/table-wrapper";
 import {
   Dialog,
@@ -14,6 +15,8 @@ import { columns } from "@/app/workspace/(components)/columns";
 import { FC, useState } from "react";
 import { Workspace } from "../../../../../../packages/types/workspace";
 import { TableEmptyInfo } from "@/components/table/ui/table-empty-info";
+import { useSelector } from "react-redux";
+import { workspacesSelector } from "@/store/selectors/workspace.selector";
 
 export type WorkspaceTableProps = {
   workspaces: Array<Workspace>;
@@ -21,6 +24,7 @@ export type WorkspaceTableProps = {
 
 export const WorkspaceTable: FC<WorkspaceTableProps> = ({ workspaces }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const selectedWorkspaces = useSelector(workspacesSelector);
 
   const onSubmitAddWorkspace = (name: string) => {
     setDialogOpen(!dialogOpen);
@@ -49,8 +53,8 @@ export const WorkspaceTable: FC<WorkspaceTableProps> = ({ workspaces }) => {
           </DialogContent>
         </Dialog>
       }>
-      {workspaces?.length ? (
-        <DataTable columns={columns} data={workspaces ?? []} />
+      {selectedWorkspaces?.length ? (
+        <DataTable columns={columns} data={selectedWorkspaces ?? []} />
       ) : (
         <TableEmptyInfo />
       )}
