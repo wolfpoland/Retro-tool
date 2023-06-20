@@ -14,13 +14,19 @@ import {
 } from "react";
 import { EditWorkspaceForm } from "@/app/workspace/(components)/dialog/edit/edit-workspace-form";
 import { DropdownMenuItem } from "@/components/dropdown-menu";
+import { Workspace } from "../../../../../../../../packages/types/workspace";
 
 export type EditWorkspaceDialogProps = {
+  workspace: Workspace;
+  onsSubmitEditDialog: (id: number, name: string) => void;
   onDialogClose: () => void;
 };
 
 export const EditWorkspaceDialog: FC<EditWorkspaceDialogProps> = forwardRef(
-  function EditWorkspaceDialog({ onDialogClose }, ref) {
+  function EditWorkspaceDialog(
+    { onDialogClose, onsSubmitEditDialog, workspace },
+    ref
+  ) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const onClick: MouseEventHandler<unknown> = (event) => {
@@ -28,7 +34,8 @@ export const EditWorkspaceDialog: FC<EditWorkspaceDialogProps> = forwardRef(
       setDialogOpen(true);
     };
 
-    const onSubmitWorkingDialog = () => {
+    const onSubmitWorkingDialog = (name: string) => {
+      onsSubmitEditDialog(workspace.id, name);
       setDialogOpen(false);
     };
 

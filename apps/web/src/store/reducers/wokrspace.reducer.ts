@@ -1,15 +1,9 @@
 "use client";
-import { createReducer, current } from "@reduxjs/toolkit";
-import {
-  createCardAction,
-  editCardAction,
-  removeCardAction,
-  setColumns,
-} from "@/store/actions/column.action";
-import { Card } from "../../../../../packages/types/card";
-import { ColumnMap } from "@/components/column/column-grid";
+import { createReducer } from "@reduxjs/toolkit";
 import { Workspace } from "../../../../../packages/types/workspace";
 import {
+  optimisticAddWorkspace,
+  optimisticEditWorkspace,
   optimisticRemoveWorkspace,
   setWorkspaces,
 } from "@/store/actions/workspace.action";
@@ -33,5 +27,21 @@ export const workspaceReducer = createReducer(initialState, (builder) => {
     state.workspace = state.workspace.filter((workspace) => {
       return workspace.id !== workspaceId;
     });
+  });
+
+  builder.addCase(optimisticAddWorkspace, (state, action) => {
+    const workspace = action.payload;
+
+    state.workspace.push(workspace);
+  });
+
+  builder.addCase(optimisticEditWorkspace, (state, action) => {
+    const workspace: Workspace = action.payload;
+
+    const index = state.workspace.findIndex(
+      (_workspace) => _workspace.id === workspace.id
+    );
+
+    state.workspace[index] = workspace;
   });
 });

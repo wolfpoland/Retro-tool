@@ -18,7 +18,7 @@ export const WorkspaceTableWrapper: FC<WorkspaceTableWrapperProps> = ({
 
   return (
     <Provider store={store}>
-      <WorkspaceTable workspaces={workspaces} />
+      <WorkspaceTable />
     </Provider>
   );
 };

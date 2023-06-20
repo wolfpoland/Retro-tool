@@ -13,20 +13,29 @@ import { AddWorkspaceDialog } from "@/app/workspace/(components)/dialog/add-work
 import { DataTable } from "@/components/table/data-table";
 import { columns } from "@/app/workspace/(components)/columns";
 import { FC, useState } from "react";
-import { Workspace } from "../../../../../../packages/types/workspace";
 import { TableEmptyInfo } from "@/components/table/ui/table-empty-info";
 import { useSelector } from "react-redux";
 import { workspacesSelector } from "@/store/selectors/workspace.selector";
+import { ClientCalls } from "@/client-calls";
+import {
+  createWorkspace,
+  Workspace,
+} from "../../../../../../packages/types/workspace";
+import { store } from "@/store/store";
+import { optimisticAddWorkspace } from "@/store/actions/workspace.action";
 
-export type WorkspaceTableProps = {
-  workspaces: Array<Workspace>;
-};
-
-export const WorkspaceTable: FC<WorkspaceTableProps> = ({ workspaces }) => {
+export const WorkspaceTable: FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const selectedWorkspaces = useSelector(workspacesSelector);
 
   const onSubmitAddWorkspace = (name: string) => {
+    ClientCalls.addWorkspace(name).then(async (response: Response) => {
+      const rawWorkspace = await response.json();
+      const workspace = createWorkspace(rawWorkspace as Workspace);
+
+      store.dispatch(optimisticAddWorkspace(workspace));
+    });
+
     setDialogOpen(!dialogOpen);
   };
 

@@ -17,6 +17,8 @@ model Workspace {
   name   String
   status String @default("CREATING_CARDS")
   column Column[]
+  createdAt DateTime @db.DateTime(0) @default(now())
+  updatedAt DateTime @db.DateTime(0) @default(now())
 }
 
 model Column {

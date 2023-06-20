@@ -8,3 +8,11 @@ export const setWorkspaces = createAction<Array<Workspace>>(
 export const optimisticRemoveWorkspace = createAction<number>(
   "workspace/optimisticRemoveWorkspace"
 );
+
+export const optimisticAddWorkspace = createAction<Workspace>(
+  "workspace/optimisticAddWorkspace"
+);
+
+export const optimisticEditWorkspace = createAction<Workspace>(
+  "workspace/optimisticEditWorkspace"
+);

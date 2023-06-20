@@ -21,7 +21,7 @@ export const WorkspaceSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   status: z.string(),
-  column: z.array(ColumnSchema),
+  column: z.array(ColumnSchema).optional(),
 });
 
 export const createWorkspace = (rawWorkspace: Workspace) => {

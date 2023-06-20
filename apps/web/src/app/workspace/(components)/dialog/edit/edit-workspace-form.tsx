@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ClientCalls } from "../../../../../client-calls";
 
 export type AddWorkspaceDialogProps = {
   onSubmitWorkingDialog: (workspaceName: string) => void;
@@ -35,8 +34,6 @@ export const EditWorkspaceForm: FC<AddWorkspaceDialogProps> = ({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("onSubmit");
-    ClientCalls.addWorkspace(values.name);
     onSubmitWorkingDialog(values.name);
   }
 

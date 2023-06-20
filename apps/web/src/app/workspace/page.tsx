@@ -8,13 +8,13 @@ import { WorkspaceTableWrapper } from "@/app/workspace/(components)/workspace-ta
 const getWorkspaces = async (): Promise<Array<Workspace>> => {
   const workspaces = await prisma.workspace.findMany({});
 
-  return workspaces.map((data) => {
+  return workspaces.map((rawWorkspace) => {
     return createWorkspace({
-      id: data.id,
-      name: data.name,
+      id: rawWorkspace.id,
+      name: rawWorkspace.name,
       column: [],
-      updatedAt: "",
-      createdAt: "",
+      updatedAt: rawWorkspace.updatedAt.toString(),
+      createdAt: rawWorkspace.createdAt.toString(),
       status: "CREATING_CARDS",
     });
   });

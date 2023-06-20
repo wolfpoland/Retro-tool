@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+// TODO: Think which way of getting data is better
 export const workspaceApi = createApi({
   reducerPath: "workspace",
   baseQuery: fetchBaseQuery({

@@ -8,14 +8,17 @@ import {
 } from "@/components/dropdown-menu";
 import { EditWorkspaceDialog } from "@/app/workspace/(components)/dialog/edit/edit-workspace-dialog";
 import { RemoveWorkspaceAlert } from "@/app/workspace/(components)/dialog/remove-workspace-alert";
-import { Workspace } from "../../../../../../packages/types/workspace";
 import {
-  useDeleteWorkspaceMutation,
-  workspaceApi,
-} from "@/store/api/workspace.api";
+  createWorkspace,
+  Workspace,
+} from "../../../../../../packages/types/workspace";
 import { ClientCalls } from "@/client-calls";
 import { store } from "@/store/store";
-import { optimisticRemoveWorkspace } from "@/store/actions/workspace.action";
+import {
+  optimisticAddWorkspace,
+  optimisticEditWorkspace,
+  optimisticRemoveWorkspace,
+} from "@/store/actions/workspace.action";
 
 export type ColumnsActionsProps = {
   workspace: Workspace;
@@ -28,6 +31,16 @@ export const ColumnsActions: FC<ColumnsActionsProps> = ({ workspace }) => {
   };
 
   const onDialogClose = () => {
+    setOpen(false);
+  };
+
+  const onEdit = (id: number, name: string) => {
+    ClientCalls.editWorkspace(id, name).then(async (response: Response) => {
+      const rawWorkspace = await response.json();
+      const workspace = createWorkspace(rawWorkspace as Workspace);
+
+      store.dispatch(optimisticEditWorkspace(workspace));
+    });
     setOpen(false);
   };
 
@@ -46,7 +59,11 @@ export const ColumnsActions: FC<ColumnsActionsProps> = ({ workspace }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem asChild>
-          <EditWorkspaceDialog onDialogClose={onDialogClose} />
+          <EditWorkspaceDialog
+            workspace={workspace}
+            onsSubmitEditDialog={onEdit}
+            onDialogClose={onDialogClose}
+          />
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <RemoveWorkspaceAlert workspace={workspace} onDelete={onDelete} />

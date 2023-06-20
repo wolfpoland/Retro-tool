@@ -10,7 +10,7 @@ export type Column = {
 export const ColumnSchema = z.object({
   id: z.number(),
   name: z.string(),
-  card: z.array(CardSchema),
+  card: z.array(CardSchema).optional(),
 });
 
 export const createColumn = (rawColumn: Column) => {

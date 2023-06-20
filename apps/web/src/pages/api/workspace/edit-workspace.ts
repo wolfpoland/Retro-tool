@@ -1,11 +1,12 @@
 import prisma from "@/utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Workspace } from "../../../../../../packages/types/workspace";
 
-export default async function addWorkspace(
+export default async function editWorkspace(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST" || !req?.body?.name) {
+  if (req.method === "POST") {
     const rawWorkspace = await saveToDatabase(req.body);
     res.status(200).json({ ...rawWorkspace });
   } else {
@@ -13,33 +14,21 @@ export default async function addWorkspace(
   }
 }
 
-async function saveToDatabase(body: { name: string }) {
-  return await prisma.workspace.create({
+async function saveToDatabase(body: Workspace) {
+  return await prisma.workspace.update({
+    where: {
+      id: body.id,
+    },
+    data: {
+      name: body.name,
+    },
     select: {
       id: true,
       name: true,
       column: true,
+      status: true,
       createdAt: true,
       updatedAt: true,
-      status: true,
-    },
-    data: {
-      name: body.name,
-      column: {
-        createMany: {
-          data: [
-            {
-              name: "Start",
-            },
-            {
-              name: "Stop",
-            },
-            {
-              name: "Future",
-            },
-          ],
-        },
-      },
     },
   });
 }
