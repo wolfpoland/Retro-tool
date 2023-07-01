@@ -3,7 +3,6 @@ import { FC } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export type AddWorkspaceDialogProps = {
   onSubmitWorkingDialog: (workspaceName: string) => void;
@@ -38,7 +38,7 @@ export const EditWorkspaceForm: FC<AddWorkspaceDialogProps> = ({
   }
 
   return (
-    <Form {...form}>
+    <Form {...(form as any)}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}

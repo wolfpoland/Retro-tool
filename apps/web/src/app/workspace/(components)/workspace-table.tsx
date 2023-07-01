@@ -43,25 +43,27 @@ export const WorkspaceTable: FC = () => {
     setDialogOpen(true);
   };
 
+  const dialog = (
+    <Dialog onOpenChange={setDialogOpen} open={dialogOpen}>
+      <DialogTrigger asChild onClick={onClick}>
+        <Button>Create Workspace</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create workspace</DialogTitle>
+          <div className="!mt-12">
+            <AddWorkspaceDialog onSubmitWorkingDialog={onSubmitAddWorkspace} />
+          </div>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <TableWrapper
-      buttons={
-        <Dialog onOpenChange={setDialogOpen} open={dialogOpen}>
-          <DialogTrigger asChild onClick={onClick}>
-            <Button>Create Workspace</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create workspace</DialogTitle>
-              <div className="!mt-12">
-                <AddWorkspaceDialog
-                  onSubmitWorkingDialog={onSubmitAddWorkspace}
-                />
-              </div>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      }>
+      title="Manage Workspaces"
+      description="Create, update and delete workspaces."
+      buttons={dialog}>
       {selectedWorkspaces?.length ? (
         <DataTable columns={columns} data={selectedWorkspaces ?? []} />
       ) : (

@@ -35,3 +35,13 @@ model Card {
   Column     Column? @relation(fields: [columnId], references: [id])
   columnId   Int?
 }
+
+model ActionPlan {
+  id         Int     @id @default(autoincrement())
+  text       String
+  percentage Int
+  assignee    String  @default("unassigned")
+  status     String  @default("TODO")
+  createdAt  DateTime @db.DateTime(0) @default(now())
+  updatedAt  DateTime @db.DateTime(0) @default(now())
+}

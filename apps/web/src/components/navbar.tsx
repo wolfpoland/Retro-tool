@@ -63,9 +63,9 @@ export const NavbarComponent: FC<NavbarProps> = ({ children }): JSX.Element => {
 
               <Link
                 className="font-semibold text-gray-500 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 sm:py-6"
-                href="example-workspace"
+                href="example-action-plans"
                 aria-current="page">
-                Example workspace
+                Example Action Plans
               </Link>
 
               <a

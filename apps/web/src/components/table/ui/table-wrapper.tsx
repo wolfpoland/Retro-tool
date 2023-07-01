@@ -2,11 +2,18 @@
 import { FC, JSX } from "react";
 
 export type TableWrapperProps = {
+  title?: string;
+  description?: string;
   children: React.ReactNode;
   buttons: JSX.Element;
 };
 
-export const TableWrapper: FC<TableWrapperProps> = ({ children, buttons }) => {
+export const TableWrapper: FC<TableWrapperProps> = ({
+  children,
+  buttons,
+  title,
+  description,
+}) => {
   return (
     <div className="mx-auto max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <div className="flex flex-col">
@@ -16,16 +23,11 @@ export const TableWrapper: FC<TableWrapperProps> = ({ children, buttons }) => {
               <div className="border-b border-b-accent bg-accent px-6 py-4 text-accent-foreground">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-semibold">Manage Workspaces</h2>
-                    <p className="text-sm">
-                      Create, update and delete workspaces.
-                    </p>
+                    <h2 className="text-xl font-semibold">{title ?? ""}</h2>
+                    <p className="text-sm">{description ?? ""}</p>
                   </div>
 
-                  <div>
-                    {buttons}
-                    {/*<Button>Create Workspace</Button>*/}
-                  </div>
+                  <div>{buttons}</div>
                 </div>
               </div>
 
