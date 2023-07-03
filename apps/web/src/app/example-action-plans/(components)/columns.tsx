@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ActionPlan } from "../../../../../../packages/types/action-plan";
-import { Edit, Edit2 } from "lucide-react";
+import { ColumnsActions } from "@/app/example-action-plans/(components)/column-actions";
 
 export const columns: ColumnDef<ActionPlan>[] = [
   {
@@ -28,7 +28,11 @@ export const columns: ColumnDef<ActionPlan>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      return <Edit />;
+      return (
+        <div className="flex h-full w-full items-center justify-center">
+          <ColumnsActions actionPlan={row.original} />
+        </div>
+      );
     },
   },
 ];

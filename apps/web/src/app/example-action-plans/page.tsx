@@ -1,10 +1,8 @@
-import { ActionPlansTable } from "@/app/example-action-plans/(components)/action-plans-table";
 import { ServerCalls } from "@/server-calls";
-
-const getActionPlans = async () => {};
+import { ActionPlansTableWrapper } from "@/app/example-action-plans/(components)/action-plans-wrapper";
 
 export default async function ExampleActionPlans() {
   const actionPlans = await ServerCalls.getAllActionPlans();
 
-  return <ActionPlansTable actionPlans={actionPlans} />;
+  return <ActionPlansTableWrapper actionPlans={actionPlans} />;
 }

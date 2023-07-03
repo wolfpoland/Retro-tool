@@ -5,10 +5,17 @@ import {
 } from "../../../../../../packages/types/action-plan";
 import { ClientCalls } from "@/client-calls";
 import { TableWrapper } from "@/components/table/ui/table-wrapper";
-import { AddActionPlanDialog } from "@/app/example-action-plans/(components)/dialog/add-action-plan-dialog";
+import { AddActionPlanDialog } from "@/app/example-action-plans/(components)/dialog/add/add-dialog";
 import { DataTable } from "@/components/table/data-table";
 import { columns } from "@/app/example-action-plans/(components)/columns";
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { actionPlanSelector } from "@/store/selectors/action-plan.selector";
+import { store } from "@/store/store";
+import {
+  createActionPlanAction,
+  setActionPlansAction,
+} from "@/store/actions/action-plan.action";
 
 export type ActionPlansTableProps = {
   actionPlans: ActionPlan[];
@@ -17,10 +24,17 @@ export type ActionPlansTableProps = {
 export const ActionPlansTable: FC<ActionPlansTableProps> = ({
   actionPlans,
 }) => {
+  const selectedActionPlans = useSelector(actionPlanSelector);
+
+  useEffect(() => {
+    store.dispatch(setActionPlansAction(actionPlans));
+  }, [actionPlans]);
+
   const onAddActionPlan = (actionPlan: ActionPlanRaw) => {
     ClientCalls.addActionPlan(actionPlan).then(async (response: Response) => {
       const rawActionPlan = await response.json();
-      console.log(rawActionPlan);
+
+      store.dispatch(createActionPlanAction(rawActionPlan));
     });
   };
 
@@ -29,7 +43,7 @@ export const ActionPlansTable: FC<ActionPlansTableProps> = ({
       title="Action Plans"
       description="Menage yours Action Plans"
       buttons={<AddActionPlanDialog onAddActionPlan={onAddActionPlan} />}>
-      <DataTable columns={columns} data={actionPlans} />
+      <DataTable columns={columns} data={selectedActionPlans} />
     </TableWrapper>
   );
 };

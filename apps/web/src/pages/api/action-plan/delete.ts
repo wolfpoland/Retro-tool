@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ActionPlanRaw } from "../../../../../../packages/types/action-plan";
 import prisma from "@/utils/prisma";
 
-export default async function addActionPlan(
+export default async function deleteActionPlan(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -12,9 +12,13 @@ export default async function addActionPlan(
       throw new Error("Wrong method");
     }
 
-    const actionPlan = await saveToDatabase(req.body);
+    const { id } = await saveToDatabase(req.body);
 
-    res.status(200).json({ ...actionPlan });
+    if (!id) {
+      throw new Error("Action plan not found");
+    }
+
+    res.status(200).json({ id });
   } catch (error) {
     res.status(500).json({ message: error });
   }
@@ -22,18 +26,17 @@ export default async function addActionPlan(
 
 async function saveToDatabase(actionPlanRaw: ActionPlanRaw) {
   const schema = z.object({
-    text: z.string(),
-    percentage: z.number(),
-    assignee: z.string(),
+    id: z.number(),
   });
 
   const data = schema.parse(actionPlanRaw);
 
-  return await prisma.actionPlan.create({
-    data: {
-      text: data.text,
-      percentage: data.percentage,
-      assignee: data.assignee,
+  return await prisma.actionPlan.delete({
+    where: {
+      id: data.id,
+    },
+    select: {
+      id: true,
     },
   });
 }

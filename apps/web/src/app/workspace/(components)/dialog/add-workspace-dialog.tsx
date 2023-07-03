@@ -38,7 +38,7 @@ export const AddWorkspaceDialog: FC<AddWorkspaceDialogProps> = ({
   }
 
   return (
-    <Form {...form}>
+    <Form {...(form as any)}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}

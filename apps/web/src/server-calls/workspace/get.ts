@@ -1,23 +1,27 @@
 import prisma from "@/utils/prisma";
 import { redisConnector } from "@/redis-connector";
-import { Workspace } from "../../../../../packages/types/workspace";
+import {
+  createWorkspace,
+  Workspace,
+} from "../../../../../packages/types/workspace";
 import { ColumnMap } from "@/components/column/column-grid";
 
 function getWorkspaceRedisKey(workspaceId: string): string {
   return `workspace:${workspaceId}`;
 }
 
-async function retrieveWorkspace(workspaceId: string) {
-  const redisWorkspace: string | null = await redisConnector.hget(
-    "workspace",
-    workspaceId
+async function retrieveWorkspace(
+  workspaceId: string
+): Promise<Workspace | null> {
+  const redisWorkspace: any = await redisConnector.hgetall(
+    getWorkspaceRedisKey(workspaceId)
   );
 
   if (redisWorkspace) {
-    return JSON.parse(redisWorkspace);
+    return createWorkspace(redisWorkspace);
   }
 
-  const workspace = await prisma.workspace.findFirst({
+  const workspace: any = await prisma.workspace.findFirst({
     where: {
       id: parseInt(workspaceId),
     },
@@ -32,7 +36,7 @@ async function retrieveWorkspace(workspaceId: string) {
 
   redisConnector.hset(getWorkspaceRedisKey(workspaceId), workspace || {});
 
-  return workspace;
+  return createWorkspace(workspace);
 }
 
 export type GetWorkspace = {

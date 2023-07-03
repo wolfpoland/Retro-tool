@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/dialog";
 import { FC, MouseEventHandler, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { AddActionPlanForm } from "@/app/example-action-plans/(components)/dialog/add-action-plan-form";
+import { AddActionPlanForm } from "@/app/example-action-plans/(components)/dialog/add/add-form";
 import {
   ActionPlan,
   ActionPlanRaw,
-} from "../../../../../../../packages/types/action-plan";
+} from "../../../../../../../../packages/types/action-plan";
 
 export type AddActionPlanDialogProps = {
   onAddActionPlan: (actionPlan: ActionPlanRaw) => void;

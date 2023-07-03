@@ -23,6 +23,14 @@ export async function getActionPlans() {
   // });
 
   return actionPlan.map((actionPlan) => {
-    return createActionPlan(actionPlan);
+    return createActionPlan({
+      id: actionPlan.id,
+      createdAt: actionPlan.createdAt.toString(),
+      updatedAt: actionPlan.updatedAt.toString(),
+      percentage: actionPlan.percentage,
+      text: actionPlan.text,
+      status: actionPlan.status,
+      assignee: actionPlan.assignee,
+    });
   });
 }

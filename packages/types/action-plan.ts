@@ -8,8 +8,8 @@ export type ActionPlan = {
   percentage: number;
   assignee: string;
   status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export const ActionPlanSchema = z.object({
@@ -18,11 +18,11 @@ export const ActionPlanSchema = z.object({
   percentage: z.number(),
   assignee: z.string(),
   status: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
-export const createActionPlan = (rawCard: ActionPlan) => {
+export const createActionPlan = (rawCard: ActionPlanRaw) => {
   ActionPlanSchema.parse(rawCard);
 
   return rawCard as ActionPlan;

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ActionPlanRaw } from "../../../../../../packages/types/action-plan";
 import prisma from "@/utils/prisma";
 
-export default async function addActionPlan(
+export default async function editActionPlan(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -22,18 +22,23 @@ export default async function addActionPlan(
 
 async function saveToDatabase(actionPlanRaw: ActionPlanRaw) {
   const schema = z.object({
-    text: z.string(),
-    percentage: z.number(),
-    assignee: z.string(),
+    id: z.number(),
   });
 
   const data = schema.parse(actionPlanRaw);
 
-  return await prisma.actionPlan.create({
+  return await prisma.actionPlan.update({
+    where: {
+      id: data.id,
+    },
     data: {
-      text: data.text,
-      percentage: data.percentage,
-      assignee: data.assignee,
+      id: actionPlanRaw.id,
+      text: actionPlanRaw.text,
+      percentage: actionPlanRaw.percentage,
+      assignee: actionPlanRaw.assignee,
+      status: actionPlanRaw.status,
+      createdAt: actionPlanRaw.createdAt,
+      updatedAt: actionPlanRaw.updatedAt,
     },
   });
 }

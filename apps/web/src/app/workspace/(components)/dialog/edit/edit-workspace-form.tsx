@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export type AddWorkspaceDialogProps = {
+export type EditWorkspaceDialogProps = {
   onSubmitWorkingDialog: (workspaceName: string) => void;
 };
 
@@ -23,7 +23,7 @@ const formSchema = z.object({
   name: z.string().min(2).max(15),
 });
 
-export const EditWorkspaceForm: FC<AddWorkspaceDialogProps> = ({
+export const EditWorkspaceForm: FC<EditWorkspaceDialogProps> = ({
   onSubmitWorkingDialog,
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({

@@ -20,12 +20,25 @@ import {
   optimisticRemoveWorkspace,
 } from "@/store/actions/workspace.action";
 import { MoreVertical } from "lucide-react";
+import {
+  ActionPlan,
+  ActionPlanRaw,
+  createActionPlan,
+} from "../../../../../../packages/types/action-plan";
+import { EditActionPlanDialog } from "@/app/example-action-plans/(components)/dialog/edit/edit-dialog";
+import {
+  createActionPlanAction,
+  deleteActionPlanAction,
+  editActionPlanAction,
+} from "@/store/actions/action-plan.action";
+import { deleteActionPlan } from "@/client-calls/action-plan/delete";
+import { RemoveActionPlanAlert } from "@/app/example-action-plans/(components)/dialog/remove-action-plan-alert";
 
 export type ColumnsActionsProps = {
-  workspace: Workspace;
+  actionPlan: ActionPlan;
 };
 
-export const ColumnsActions: FC<ColumnsActionsProps> = ({ workspace }) => {
+export const ColumnsActions: FC<ColumnsActionsProps> = ({ actionPlan }) => {
   const [open, setOpen] = useState(false);
   const onOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
@@ -35,19 +48,21 @@ export const ColumnsActions: FC<ColumnsActionsProps> = ({ workspace }) => {
     setOpen(false);
   };
 
-  const onEdit = (id: number, name: string) => {
-    ClientCalls.editWorkspace(id, name).then(async (response: Response) => {
-      const rawWorkspace = await response.json();
-      const workspace = createWorkspace(rawWorkspace as Workspace);
+  const onEdit = (actionPlanRaw: ActionPlanRaw) => {
+    ClientCalls.editActionPlan(actionPlanRaw).then(
+      async (response: Response) => {
+        const rawActionPlan = await response.json();
+        const actionPlan = createActionPlan(rawActionPlan as ActionPlanRaw);
 
-      store.dispatch(optimisticEditWorkspace(workspace));
-    });
+        store.dispatch(editActionPlanAction(actionPlan));
+      }
+    );
     setOpen(false);
   };
 
-  const onDelete = (workspace: Workspace) => {
-    ClientCalls.deleteWorkspace(workspace.id).then(() => {
-      store.dispatch(optimisticRemoveWorkspace(workspace.id));
+  const onDelete = (id: number) => {
+    ClientCalls.deleteActionPlan(id).then(() => {
+      store.dispatch(deleteActionPlanAction(id));
     });
     setOpen(false);
   };
@@ -60,14 +75,14 @@ export const ColumnsActions: FC<ColumnsActionsProps> = ({ workspace }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem asChild>
-          <EditWorkspaceDialog
-            workspace={workspace}
-            onsSubmitEditDialog={onEdit}
+          <EditActionPlanDialog
+            actionPlan={actionPlan}
             onDialogClose={onDialogClose}
+            onsSubmitEditDialog={onEdit}
           />
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <RemoveWorkspaceAlert workspace={workspace} onDelete={onDelete} />
+          <RemoveActionPlanAlert actionPlan={actionPlan} onDelete={onDelete} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

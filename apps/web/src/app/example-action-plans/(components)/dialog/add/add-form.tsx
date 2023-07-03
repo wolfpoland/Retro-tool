@@ -1,9 +1,9 @@
 "use client";
-import { FC, FormEventHandler } from "react";
+import { FC } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ActionPlanRaw } from "../../../../../../../packages/types/action-plan";
+import { ActionPlanRaw } from "../../../../../../../../packages/types/action-plan";
 import {
   Form,
   FormControl,
@@ -18,22 +18,17 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { actionPlanFormSchema } from "@/app/example-action-plans/(components)/dialog/util";
 
 export type AddActionPlanFormProps = {
   onSubmitAddingActionPlan: (actionPlan: ActionPlanRaw) => void;
 };
 
-const formSchema = z.object({
-  text: z.string().min(2).max(255),
-  assignee: z.string().min(2).max(15),
-  percentage: z.array(z.number().min(0).max(100)),
-});
-
 export const AddActionPlanForm: FC<AddActionPlanFormProps> = ({
   onSubmitAddingActionPlan,
 }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof actionPlanFormSchema>>({
+    resolver: zodResolver(actionPlanFormSchema),
     defaultValues: {
       text: "",
       assignee: "",
@@ -41,7 +36,7 @@ export const AddActionPlanForm: FC<AddActionPlanFormProps> = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof actionPlanFormSchema>) {
     onSubmitAddingActionPlan({
       text: values.text,
       assignee: values.assignee,
