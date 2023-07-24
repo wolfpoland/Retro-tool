@@ -8,9 +8,9 @@ import { Card } from "../../../../../packages/types/card";
 
 type ColumnProps = {
   title: string;
-  columnId: string;
+  columnId: number;
   cards: Array<Card>;
-  onCardAdd: (text: string, columnName: string, columnId: string) => void;
+  onCardAdd: (text: string, columnName: string, columnId: number) => void;
   onCardRemove: (card: Card) => void;
   onCardEdit: (card: Card) => void;
 };

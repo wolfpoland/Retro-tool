@@ -1,6 +1,6 @@
 import { Card } from "../../../../packages/types/card";
 
-export async function addCard(text: string, columnId: string): Promise<number> {
+export async function addCard(text: string, columnId: number): Promise<number> {
   const response = await fetch(`/api/add-card`, {
     method: "POST",
     headers: {

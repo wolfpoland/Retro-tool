@@ -17,10 +17,20 @@ export type ColumnMap = {
 
 export type ColumnGridComponentProps = {
   columnHash: ColumnMap;
+  onCardAdd: (
+    text: string,
+    columnName: string,
+    columnId: number
+  ) => Promise<number>;
+  onCardRemove: (id: number) => void;
+  onCardUpdate: (card: Card) => void;
 };
 
 export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   columnHash,
+  onCardAdd,
+  onCardRemove,
+  onCardUpdate,
 }) => {
   const wsObserver = useContext(WsObserverContext);
   const columns = useSelector(columnsSelector);
@@ -29,17 +39,17 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     store.dispatch(setColumns(columnHash));
   }, [columnHash]);
 
-  const onCardAdd = async (
+  const handleCardAdd = async (
     text: string,
     columnName: string,
-    columnId: string
+    columnId: number
   ) => {
-    const id = await ClientCalls.addCard(text, columnId);
+    const id = await onCardAdd(text, columnName, columnId);
 
     const card = createCard({
       id,
       text,
-      columnId: parseInt(columnId),
+      columnId: columnId,
     });
 
     wsObserver?.emitMessage({
@@ -51,7 +61,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   const handleCardRemove = (card: Card) => {
-    ClientCalls.deleteCard(card.id);
+    onCardRemove(card.id);
 
     wsObserver?.emitMessage({
       id: crypto.randomUUID(),
@@ -64,7 +74,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   const handleCardEdit = (card: Card) => {
-    ClientCalls.updateCard(card);
+    onCardUpdate(card);
 
     wsObserver?.emitMessage({
       id: crypto.randomUUID(),
@@ -83,7 +93,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       <ColumnComponent
         key={key}
         columnId={column.id}
-        onCardAdd={onCardAdd}
+        onCardAdd={handleCardAdd}
         onCardRemove={handleCardRemove}
         onCardEdit={handleCardEdit}
         title={column.name}

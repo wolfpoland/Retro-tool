@@ -2,7 +2,7 @@ import { Card, CardSchema } from "./card";
 import { z } from "zod";
 
 export type Column = {
-  id: string;
+  id: number;
   name: string;
   card: Card[];
 };

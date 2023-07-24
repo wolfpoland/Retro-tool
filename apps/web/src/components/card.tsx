@@ -1,8 +1,9 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import { Card } from "../../../../packages/types/card";
 import { RxPencil1, RxTrash } from "react-icons/rx";
 import { IconComponent } from "@/components/ui/icon";
 import { TextareaComponent } from "@/components/ui/textarea";
+import { ControlPanel } from "@/components/ui/control-panel";
 
 export type CardProps = {
   card: Card;
@@ -58,6 +59,19 @@ export const CardComponent: FC<CardProps> = ({
     }
   }, [mouseOver]);
 
+  const controlPanelElements: Array<ReactNode> = [
+    <IconComponent
+      key={0}
+      iconType={RxPencil1}
+      onIconClick={handleEditOnClick}
+    />,
+    <IconComponent
+      key={1}
+      iconType={RxTrash}
+      onIconClick={handleRemoveOnClick}
+    />,
+  ];
+
   return (
     <div
       onMouseOver={handleMouseOver}
@@ -66,19 +80,7 @@ export const CardComponent: FC<CardProps> = ({
               shadow-sm dark:border-gray-600  dark:text-gray-300
               dark:shadow-slate-700/[.7] md:p-5 ${styles}`}>
       <div className="flex items-center justify-end">
-        {mouseOver && (
-          <div className="mb-1 flex w-24 items-center justify-between rounded-md border bg-gray-700 px-2 py-1 dark:border-gray-600">
-            <IconComponent
-              iconType={RxPencil1}
-              onIconClick={handleEditOnClick}
-            />
-            <div className="h-4 w-1 border-r-2 border-gray-600"></div>
-            <IconComponent
-              iconType={RxTrash}
-              onIconClick={handleRemoveOnClick}
-            />
-          </div>
-        )}
+        {mouseOver && <ControlPanel elements={controlPanelElements} />}
       </div>
 
       {editMode ? (

@@ -1,5 +1,6 @@
 import { FC, useRef } from "react";
 import { IconType } from "react-icons";
+import { IconWrapper } from "@/components/ui/icon-wrapper";
 
 export type IconComponentProps = {
   iconType: IconType;
@@ -12,11 +13,5 @@ export const IconComponent: FC<IconComponentProps> = ({
 }) => {
   const icon = useRef(iconType({}));
 
-  return (
-    <div
-      className="flex h-[25px] w-[25px] cursor-pointer items-center justify-center rounded-full hover:bg-gray-600"
-      onClick={onIconClick}>
-      {icon.current}
-    </div>
-  );
+  return <IconWrapper onIconClick={onIconClick}>{icon.current}</IconWrapper>;
 };

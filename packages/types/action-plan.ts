@@ -2,12 +2,18 @@ import { z } from "zod";
 
 export type ActionPlanRaw = Partial<ActionPlan>;
 
+export enum ActionPlanStatus {
+  TODO = "TODO",
+  IN_PROGRESS = "IN_PROGRESS",
+  DONE = "DONE",
+}
+
 export type ActionPlan = {
   id: number;
   text: string;
   percentage: number;
   assignee: string;
-  status: string;
+  status: ActionPlanStatus;
   createdAt: string;
   updatedAt: string;
 };

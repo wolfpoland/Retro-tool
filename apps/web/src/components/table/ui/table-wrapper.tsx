@@ -15,7 +15,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
   description,
 }) => {
   return (
-    <div className="mx-auto max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div className="container mx-auto mt-3 sm:px-6">
       <div className="flex flex-col">
         <div className="-m-1.5 overflow-x-auto">
           <div className="inline-block min-w-full p-1.5 align-middle">
