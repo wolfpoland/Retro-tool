@@ -35,6 +35,7 @@ export const ActionPlansColumnGridWrapper: FC<ActionPlansColumnGridWrapper> = ({
 
   useEffect(() => {
     const convertedActionPlans = convertActionPlansToColumnMap(actionPlans);
+
     setColumnMap(convertedActionPlans);
   }, [actionPlans]);
 
@@ -76,11 +77,11 @@ const convertActionPlansToColumnMap = (
   const columnMap: ColumnMap = createActionPlansColumnMap();
 
   actionPlans.map((actionPlan) => {
-    if (actionPlan.status === "TODO") {
-      const todoColumn = columnMap[ActionPlanStatus.TODO];
-      const inProgressColumn = columnMap[ActionPlanStatus.IN_PROGRESS];
-      const doneColumn = columnMap[ActionPlanStatus.DONE];
+    const todoColumn = columnMap[ActionPlanStatus.TODO];
+    const inProgressColumn = columnMap[ActionPlanStatus.IN_PROGRESS];
+    const doneColumn = columnMap[ActionPlanStatus.DONE];
 
+    if (actionPlan.status === "TODO") {
       todoColumn.card = [
         ...todoColumn.card,
         createCard({
@@ -89,7 +90,9 @@ const convertActionPlansToColumnMap = (
           columnId: todoColumn.id,
         }),
       ];
+    }
 
+    if (actionPlan.status === "IN_PROGRESS") {
       inProgressColumn.card = [
         ...inProgressColumn.card,
         createCard({
@@ -98,7 +101,9 @@ const convertActionPlansToColumnMap = (
           columnId: inProgressColumn.id,
         }),
       ];
+    }
 
+    if (actionPlan.status === "DONE") {
       doneColumn.card = [
         ...doneColumn.card,
         createCard({

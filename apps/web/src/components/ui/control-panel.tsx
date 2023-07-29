@@ -6,10 +6,15 @@ export enum ControlPanelIndex {
   TABLE = "TABLE",
 }
 
+export type ControlPanelElement = {
+  node: ReactNode;
+  index: string;
+};
+
 export type ControlPanelProps = {
-  selectedControlPanelIndex: ControlPanelIndex;
-  elements: Array<{ node: ReactNode; index: string }>;
-  onClick: (key: ControlPanelIndex) => void;
+  selectedControlPanelIndex?: ControlPanelIndex;
+  elements: Array<ControlPanelElement>;
+  onClick?: (key: ControlPanelIndex) => void;
 };
 
 export const ControlPanel: FC<ControlPanelProps> = ({
@@ -28,7 +33,7 @@ export const ControlPanel: FC<ControlPanelProps> = ({
                   ? "rounded-md bg-muted text-muted-foreground"
                   : ""
               }
-              onClick={() => onClick(index as ControlPanelIndex)}
+              onClick={() => onClick && onClick(index as ControlPanelIndex)}
               key={index}>
               {node}
             </div>

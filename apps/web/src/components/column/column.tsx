@@ -5,6 +5,7 @@ import { CardComponent } from "@/components/card";
 import { TextareaComponent } from "@/components/ui/textarea";
 import { cn } from "@/utils/util";
 import { Card } from "../../../../../packages/types/card";
+import { useDroppable } from "@dnd-kit/core";
 
 type ColumnProps = {
   title: string;
@@ -24,6 +25,10 @@ export const ColumnComponent: FC<ColumnProps> = ({
   onCardEdit,
 }) => {
   const textArea = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef(null);
+  const { isOver, setNodeRef } = useDroppable({
+    id: columnId,
+  });
 
   const handleKeyDownOnTextArea = (
     event: React.KeyboardEvent<HTMLTextAreaElement>
@@ -46,6 +51,8 @@ export const ColumnComponent: FC<ColumnProps> = ({
     onCardEdit(card);
   };
 
+  const style = isOver ? "background: green" : "";
+
   return (
     <div
       className={cn(`flex h-full flex-col rounded-xl border bg-white
@@ -60,17 +67,21 @@ export const ColumnComponent: FC<ColumnProps> = ({
         </h3>
       </div>
 
-      <div className="h-[60vh] max-h-[60vh] flex-1 overflow-auto p-4 md:p-5">
-        {cards.map((card: Card) => {
-          return (
-            <CardComponent
-              onCardRemove={handleCardRemove}
-              onCardEdit={handleCardEdit}
-              key={card.id}
-              card={card}
-            />
-          );
-        })}
+      <div
+        ref={containerRef}
+        className="h-[60vh] max-h-[60vh] flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-5">
+        <div ref={setNodeRef} className={`h-full w-full ${style}`}>
+          {cards.map((card: Card) => {
+            return (
+              <CardComponent
+                key={card.id}
+                card={card}
+                onCardRemove={handleCardRemove}
+                onCardEdit={handleCardEdit}
+              />
+            );
+          })}
+        </div>
       </div>
 
       <div

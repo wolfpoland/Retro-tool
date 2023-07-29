@@ -13,13 +13,13 @@ function getWorkspaceRedisKey(workspaceId: string): string {
 async function retrieveWorkspace(
   workspaceId: string
 ): Promise<Workspace | null> {
-  const redisWorkspace: any = await redisConnector.hgetall(
-    getWorkspaceRedisKey(workspaceId)
-  );
-
-  if (redisWorkspace) {
-    return createWorkspace(redisWorkspace);
-  }
+  // const redisWorkspace: any = await redisConnector.hgetall(
+  //   getWorkspaceRedisKey(workspaceId)
+  // );
+  //
+  // if (redisWorkspace) {
+  //   return createWorkspace(redisWorkspace);
+  // }
 
   const workspace: any = await prisma.workspace.findFirst({
     where: {

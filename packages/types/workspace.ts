@@ -25,6 +25,8 @@ export const WorkspaceSchema = z.object({
 });
 
 export const createWorkspace = (rawWorkspace: Workspace) => {
+  rawWorkspace.createdAt = rawWorkspace.createdAt.toString();
+  rawWorkspace.updatedAt = rawWorkspace.updatedAt.toString();
   WorkspaceSchema.parse(rawWorkspace);
 
   return rawWorkspace as Workspace;

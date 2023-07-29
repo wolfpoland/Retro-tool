@@ -13,31 +13,31 @@ export type ActionPlansTableProps = {
   actionPlans: ActionPlan[];
 };
 
+const elements: Array<{ node: ReactNode; index: string }> = [
+  {
+    node: (
+      <IconWrapper key="1">
+        <KanbanSquare />
+      </IconWrapper>
+    ),
+    index: ControlPanelIndex.KANBAN,
+  },
+  {
+    node: (
+      <IconWrapper key="0">
+        <Table />
+      </IconWrapper>
+    ),
+    index: ControlPanelIndex.TABLE,
+  },
+];
+
 export const ActionPlansTableWrapper: FC<ActionPlansTableProps> = ({
   actionPlans,
 }) => {
   const [controlPanelIndex, setControlPanel] = useState<ControlPanelIndex>(
     ControlPanelIndex.KANBAN
   );
-
-  const elements: Array<{ node: ReactNode; index: string }> = [
-    {
-      node: (
-        <IconWrapper key="1">
-          <KanbanSquare />
-        </IconWrapper>
-      ),
-      index: ControlPanelIndex.KANBAN,
-    },
-    {
-      node: (
-        <IconWrapper key="0">
-          <Table />
-        </IconWrapper>
-      ),
-      index: ControlPanelIndex.TABLE,
-    },
-  ];
 
   const onControlPanelClick = (key: ControlPanelIndex) => {
     setControlPanel(key);

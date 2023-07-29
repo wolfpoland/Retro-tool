@@ -1,5 +1,11 @@
 "use client";
-import { FC, useContext, useEffect } from "react";
+import React, {
+  FC,
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ColumnComponent } from "./column";
 import { WsObserverContext } from "@/providers/ws";
 import { useSelector } from "react-redux";
@@ -9,7 +15,10 @@ import { store } from "@/store/store";
 import { setColumns } from "@/store/actions/column.action";
 import { cn } from "@/utils/util";
 import { Column } from "../../../../../packages/types/column";
-import { ClientCalls } from "../../client-calls";
+import { DndContext, DragOverlay, DragStartEvent } from "@dnd-kit/core";
+import { DragEndEvent } from "@dnd-kit/core/dist/types";
+import { createPortal } from "react-dom";
+import { CardComponent } from "@/components/card";
 
 export type ColumnMap = {
   [key: string]: Column;
@@ -34,6 +43,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
 }) => {
   const wsObserver = useContext(WsObserverContext);
   const columns = useSelector(columnsSelector);
+  const [getCard, setCard] = useState<Card | null>(null);
 
   useEffect(() => {
     store.dispatch(setColumns(columnHash));
@@ -86,6 +96,16 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     });
   };
 
+  const onDragEnd = (event: DragEndEvent) => {
+    console.log("dtage end", event);
+  };
+
+  const onDragStart = (event: DragStartEvent) => {
+    const data: MutableRefObject<{ card: Card }> = event.active
+      .data as MutableRefObject<{ card: Card }>;
+    setCard(data.current.card);
+  };
+
   const generatedColumns = Object.keys(columns).map((key) => {
     const column = columns[key];
 
@@ -103,16 +123,27 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   });
 
   return (
-    <div
-      className={cn(
-        "mx-auto h-[110vh] max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6"
-      )}>
-      <div
-        className={cn(
-          "mt-12 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center"
-        )}>
-        {generatedColumns}
-      </div>
-    </div>
+    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <>
+        <div
+          className={cn(
+            "mx-auto h-[110vh] max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6"
+          )}>
+          <div
+            className={cn(
+              "mt-12 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center"
+            )}>
+            {generatedColumns}
+          </div>
+        </div>
+        {getCard &&
+          createPortal(
+            <DragOverlay>
+              <CardComponent card={getCard} />
+            </DragOverlay>,
+            document.body
+          )}
+      </>
+    </DndContext>
   );
 };
