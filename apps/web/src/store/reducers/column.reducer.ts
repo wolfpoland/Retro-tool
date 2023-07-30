@@ -1,10 +1,11 @@
 "use client";
 import { createReducer, current } from "@reduxjs/toolkit";
 import {
+  changeColumnAction,
   createCardAction,
   editCardAction,
   removeCardAction,
-  setColumns,
+  setColumnsAction,
 } from "@/store/actions/column.action";
 import { Card } from "../../../../../packages/types/card";
 import { ColumnMap } from "@/components/column/column-grid";
@@ -28,7 +29,7 @@ export const columnReducer = createReducer(initialState, (builder) => {
     state.columnMap[card.columnId] = prevColumns;
   });
 
-  builder.addCase(setColumns, (state, action) => {
+  builder.addCase(setColumnsAction, (state, action) => {
     state.columnMap = action.payload;
   });
 
@@ -54,5 +55,16 @@ export const columnReducer = createReducer(initialState, (builder) => {
         return stateCard;
       }
     });
+  });
+
+  builder.addCase(changeColumnAction, (state, action) => {
+    const card: Card = action.payload.card;
+    const column = state.columnMap[card.columnId];
+
+    column.card = column.card.filter((_card) => {
+      return _card.id !== card.id;
+    });
+
+    state.columnMap[action.payload.dropColumnId].card.push(card);
   });
 });

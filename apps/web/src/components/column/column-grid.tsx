@@ -12,7 +12,10 @@ import { useSelector } from "react-redux";
 import { columnsSelector } from "@/store/selectors/column.selector";
 import { Card, createCard } from "../../../../../packages/types/card";
 import { store } from "@/store/store";
-import { setColumns } from "@/store/actions/column.action";
+import {
+  changeColumnAction,
+  setColumnsAction,
+} from "@/store/actions/column.action";
 import { cn } from "@/utils/util";
 import { Column } from "../../../../../packages/types/column";
 import { DndContext, DragOverlay, DragStartEvent } from "@dnd-kit/core";
@@ -46,7 +49,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   const [getCard, setCard] = useState<Card | null>(null);
 
   useEffect(() => {
-    store.dispatch(setColumns(columnHash));
+    store.dispatch(setColumnsAction(columnHash));
   }, [columnHash]);
 
   const handleCardAdd = async (
@@ -97,7 +100,26 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   const onDragEnd = (event: DragEndEvent) => {
-    console.log("dtage end", event);
+    const data: MutableRefObject<{ card: Card }> = event.active
+      .data as MutableRefObject<{ card: Card }>;
+
+    if (!event.over) {
+      return;
+    }
+
+    store.dispatch(
+      changeColumnAction({
+        card: data.current.card,
+        dropColumnId: event.over.id as number,
+      })
+    );
+
+    const updatedCard = createCard({
+      ...data.current.card,
+      columnId: event.over.id as number,
+    });
+
+    handleCardEdit(updatedCard);
   };
 
   const onDragStart = (event: DragStartEvent) => {
