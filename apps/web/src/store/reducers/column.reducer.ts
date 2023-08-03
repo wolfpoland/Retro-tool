@@ -1,6 +1,7 @@
 "use client";
 import { createReducer, current } from "@reduxjs/toolkit";
 import {
+  changeCardOrderAction,
   changeColumnAction,
   createCardAction,
   editCardAction,
@@ -9,6 +10,7 @@ import {
 } from "@/store/actions/column.action";
 import { Card } from "../../../../../packages/types/card";
 import { ColumnMap } from "@/components/column/column-grid";
+import { arrayMove } from "@dnd-kit/sortable";
 
 type ColumnState = {
   columnMap: ColumnMap;
@@ -61,10 +63,25 @@ export const columnReducer = createReducer(initialState, (builder) => {
     const card: Card = action.payload.card;
     const column = state.columnMap[card.columnId];
 
-    column.card = column.card.filter((_card) => {
-      return _card.id !== card.id;
+    column.card = column.card.filter((stateCard) => {
+      return stateCard.id !== card.id;
     });
 
     state.columnMap[action.payload.dropColumnId].card.push(card);
+  });
+
+  builder.addCase(changeCardOrderAction, (state, action) => {
+    const card: Card = action.payload.card;
+    const column = state.columnMap[card.columnId];
+    const cards = column.card;
+
+    const collisionCardIndex = cards.findIndex((stateCard) => {
+      return stateCard.id === action.payload.collisionCard.id;
+    });
+    const cardIndex = cards.findIndex((stateCard) => {
+      return stateCard.id === card.id;
+    });
+
+    column.card = arrayMove(cards, cardIndex, collisionCardIndex);
   });
 });

@@ -13,15 +13,28 @@ import { columnsSelector } from "@/store/selectors/column.selector";
 import { Card, createCard } from "../../../../../packages/types/card";
 import { store } from "@/store/store";
 import {
+  changeCardOrderAction,
   changeColumnAction,
   setColumnsAction,
 } from "@/store/actions/column.action";
 import { cn } from "@/utils/util";
 import { Column } from "../../../../../packages/types/column";
-import { DndContext, DragOverlay, DragStartEvent } from "@dnd-kit/core";
+import {
+  closestCenter,
+  defaultDropAnimationSideEffects,
+  DndContext,
+  DragOverlay,
+  DragStartEvent,
+  DropAnimation,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { DragEndEvent } from "@dnd-kit/core/dist/types";
 import { createPortal } from "react-dom";
 import { CardComponent } from "@/components/card";
+import { dndPortal } from "@/utils/dnd-portal";
+import { arrayMove } from "@dnd-kit/sortable";
 
 export type ColumnMap = {
   [key: string]: Column;
@@ -47,6 +60,16 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   const wsObserver = useContext(WsObserverContext);
   const columns = useSelector(columnsSelector);
   const [getCard, setCard] = useState<Card | null>(null);
+  const dropAnimationConfig: DropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: "0.4",
+        },
+      },
+    }),
+  };
+  const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
     store.dispatch(setColumnsAction(columnHash));
@@ -100,12 +123,28 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   const onDragEnd = (event: DragEndEvent) => {
-    const data: MutableRefObject<{ card: Card }> = event.active
-      .data as MutableRefObject<{ card: Card }>;
-
     if (!event.over) {
       return;
     }
+
+    const current = event.over.data.current;
+    const data: MutableRefObject<{ card: Card }> = event.active
+      .data as MutableRefObject<{ card: Card }>;
+
+    if (current && current["card"]) {
+      const card: Card = current.card;
+
+      store.dispatch(
+        changeCardOrderAction({
+          card: data.current.card,
+          collisionCard: card,
+        })
+      );
+
+      return;
+    }
+
+    console.log("change column");
 
     store.dispatch(
       changeColumnAction({
@@ -145,7 +184,11 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   });
 
   return (
-    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}>
       <>
         <div
           className={cn(
@@ -160,10 +203,10 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
         </div>
         {getCard &&
           createPortal(
-            <DragOverlay>
+            <DragOverlay dropAnimation={dropAnimationConfig}>
               <CardComponent card={getCard} />
             </DragOverlay>,
-            document.body
+            dndPortal()
           )}
       </>
     </DndContext>

@@ -6,6 +6,7 @@ import { TextareaComponent } from "@/components/ui/textarea";
 import { cn } from "@/utils/util";
 import { Card } from "../../../../../packages/types/card";
 import { useDroppable } from "@dnd-kit/core";
+import { SortableContext } from "@dnd-kit/sortable";
 
 type ColumnProps = {
   title: string;
@@ -71,16 +72,18 @@ export const ColumnComponent: FC<ColumnProps> = ({
         ref={containerRef}
         className="h-[60vh] max-h-[60vh] flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-5">
         <div ref={setNodeRef} className={`h-full w-full ${style}`}>
-          {cards.map((card: Card) => {
-            return (
-              <CardComponent
-                key={card.id}
-                card={card}
-                onCardRemove={handleCardRemove}
-                onCardEdit={handleCardEdit}
-              />
-            );
-          })}
+          <SortableContext items={cards}>
+            {cards.map((card: Card) => {
+              return (
+                <CardComponent
+                  key={card.id}
+                  card={card}
+                  onCardRemove={handleCardRemove}
+                  onCardEdit={handleCardEdit}
+                />
+              );
+            })}
+          </SortableContext>
         </div>
       </div>
 

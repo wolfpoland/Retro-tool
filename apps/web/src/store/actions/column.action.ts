@@ -7,6 +7,11 @@ export type ChangeColumnActionType = {
   card: Card;
 };
 
+export type ChangeCardOrderActionType = {
+  collisionCard: Card;
+  card: Card;
+};
+
 export const createCardAction = createAction<Card>("column/createCard");
 
 export const removeCardAction = createAction<Card>("column/removeCard");
@@ -15,4 +20,7 @@ export const editCardAction = createAction<Card>("column/editCard");
 export const setColumnsAction = createAction<ColumnMap>("column/setColumn");
 export const changeColumnAction = createAction<ChangeColumnActionType>(
   "column/changeColumn"
+);
+export const changeCardOrderAction = createAction<ChangeCardOrderActionType>(
+  "column/changeCardOrder"
 );

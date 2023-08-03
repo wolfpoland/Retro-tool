@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import { Card } from "../../../../packages/types/card";
 import { RxPencil1, RxTrash } from "react-icons/rx";
 import { IconComponent } from "@/components/ui/icon";
@@ -24,11 +24,19 @@ export const CardComponent: FC<CardProps> = ({
   const [editMode, setEditMode] = useState<boolean>(false);
   const [styles, setStyles] = useState<string>("");
   const textArea = useRef<HTMLTextAreaElement>(null);
-  const { attributes, listeners, setNodeRef, transform } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    isDragging,
+    transition,
+  } = useSortable({
     id: card.id,
     data: {
       card,
     },
+    // strategy: rectSwappingStrategy,
   });
 
   const handleMouseOver = () => {
@@ -60,11 +68,14 @@ export const CardComponent: FC<CardProps> = ({
       setEditMode(false);
     }
   };
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
+
+  const style: CSSProperties = {
+    opacity: isDragging ? 0.4 : undefined,
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
+    transition,
+  };
 
   useEffect(() => {
     if (mouseOver) {
