@@ -72,7 +72,7 @@ export const ColumnComponent: FC<ColumnProps> = ({
         ref={containerRef}
         className="h-[60vh] max-h-[60vh] flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-5">
         <div ref={setNodeRef} className={`h-full w-full ${style}`}>
-          <SortableContext items={cards}>
+          <SortableContext id={columnId.toString()} items={cards}>
             {cards.map((card: Card) => {
               return (
                 <CardComponent

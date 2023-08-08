@@ -9,10 +9,15 @@ import React, {
 import { ColumnComponent } from "./column";
 import { WsObserverContext } from "@/providers/ws";
 import { useSelector } from "react-redux";
-import { columnsSelector } from "@/store/selectors/column.selector";
+import {
+  columnsSelector,
+  previewSelector,
+} from "@/store/selectors/column.selector";
 import { Card, createCard } from "../../../../../packages/types/card";
 import { store } from "@/store/store";
 import {
+  addingPreviewAction,
+  addingPreviewSuccessAction,
   changeCardOrderAction,
   changeColumnAction,
   setColumnsAction,
@@ -34,7 +39,6 @@ import { DragEndEvent } from "@dnd-kit/core/dist/types";
 import { createPortal } from "react-dom";
 import { CardComponent } from "@/components/card";
 import { dndPortal } from "@/utils/dnd-portal";
-import { arrayMove } from "@dnd-kit/sortable";
 
 export type ColumnMap = {
   [key: string]: Column;
@@ -50,6 +54,9 @@ export type ColumnGridComponentProps = {
   onCardRemove: (id: number) => void;
   onCardUpdate: (card: Card) => void;
 };
+// Rzeczy do zrobienia:
+// [] Dodac update column
+// [] Dodac position dla card
 
 export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   columnHash,
@@ -59,6 +66,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
 }) => {
   const wsObserver = useContext(WsObserverContext);
   const columns = useSelector(columnsSelector);
+  const { previewColumnId, previewCard } = useSelector(previewSelector);
   const [getCard, setCard] = useState<Card | null>(null);
   const dropAnimationConfig: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -127,12 +135,17 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       return;
     }
 
-    const current = event.over.data.current;
+    const currentOver = event?.over?.data.current;
     const data: MutableRefObject<{ card: Card }> = event.active
       .data as MutableRefObject<{ card: Card }>;
 
-    if (current && current["card"]) {
-      const card: Card = current.card;
+    if (
+      currentOver &&
+      currentOver["card"] &&
+      currentOver.card.id !== data.current.card.id &&
+      currentOver.card.columnId === data.current.card.columnId
+    ) {
+      const card: Card = currentOver.card;
 
       store.dispatch(
         changeCardOrderAction({
@@ -142,23 +155,66 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       );
 
       return;
+    } else if (previewColumnId) {
+      store.dispatch(addingPreviewSuccessAction());
+      const updatedCard = createCard({
+        ...data.current.card,
+        columnId: previewColumnId,
+      });
+
+      handleCardEdit(updatedCard);
+      return;
     }
 
-    console.log("change column");
+    const dropColumnId: number | undefined = currentOver
+      ? parseInt(currentOver?.sortable?.containerId)
+      : (event.over?.id as number | undefined);
+
+    if (!dropColumnId) {
+      return;
+    }
 
     store.dispatch(
       changeColumnAction({
         card: data.current.card,
-        dropColumnId: event.over.id as number,
+        dropColumnId,
       })
     );
 
     const updatedCard = createCard({
       ...data.current.card,
-      columnId: event.over.id as number,
+      columnId: dropColumnId,
     });
 
     handleCardEdit(updatedCard);
+  };
+
+  const onDragOver = (event: DragEndEvent) => {
+    const currentActiveData: { card: Card } | undefined = event.active.data
+      .current as { card: Card } | undefined;
+    const currentOverData: { card: Card } | undefined = event.over?.data
+      .current as { card: Card } | undefined;
+
+    if (!currentActiveData?.card || !currentOverData?.card) {
+      return;
+    }
+
+    if (
+      currentActiveData &&
+      currentOverData &&
+      (previewCard ||
+        currentActiveData.card.columnId === currentOverData.card.columnId ||
+        currentActiveData.card.id === currentOverData.card.id)
+    ) {
+      return;
+    }
+
+    store.dispatch(
+      addingPreviewAction({
+        card: currentActiveData?.card as Card,
+        overCard: currentOverData?.card as Card,
+      })
+    );
   };
 
   const onDragStart = (event: DragStartEvent) => {
@@ -188,7 +244,8 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={onDragStart}
-      onDragEnd={onDragEnd}>
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}>
       <>
         <div
           className={cn(

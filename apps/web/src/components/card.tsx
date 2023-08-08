@@ -8,6 +8,7 @@ import {
   ControlPanelElement,
 } from "@/components/ui/control-panel";
 import { useSortable } from "@dnd-kit/sortable";
+import { motion } from "framer-motion";
 
 export type CardProps = {
   card: Card;
@@ -79,9 +80,9 @@ export const CardComponent: FC<CardProps> = ({
 
   useEffect(() => {
     if (mouseOver) {
-      setStyles("dark:bg-gray-500");
+      setStyles("bg-gray-500");
     } else {
-      setStyles("dark:bg-gray-700");
+      setStyles("bg-gray-700");
     }
   }, [mouseOver]);
 
@@ -109,31 +110,35 @@ export const CardComponent: FC<CardProps> = ({
   ];
 
   return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseLeave}
-      style={style}
-      className={`mb-4 flex flex-col rounded-xl border bg-white p-4
-              shadow-sm dark:border-gray-600  dark:text-gray-300
-              dark:shadow-slate-700/[.7] md:p-5 ${styles}
-              `}>
-      <div className="flex items-center justify-end">
-        {mouseOver && <ControlPanel elements={elements} />}
-      </div>
-
-      {editMode ? (
-        <TextareaComponent
-          value={card.text}
-          textAreaRef={textArea}
-          handleKeyDownOnTextArea={handleKeyDownOnTextArea}
-          rows={1}
-        />
-      ) : (
-        card.text
+    <div onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
+      {mouseOver && (
+        <motion.div
+          style={{ opacity: mouseOver ? 1 : 0 }}
+          transition={{ duration: 2 }}
+          className="flex items-center justify-end">
+          <ControlPanel elements={elements} />
+        </motion.div>
       )}
+      <div
+        ref={setNodeRef}
+        {...listeners}
+        {...attributes}
+        style={style}
+        className={`mb-4 flex flex-col rounded-xl border p-4
+              shadow-sm transition  duration-200 ease-in-out dark:border-gray-600 dark:text-gray-300
+           md:p-5 ${styles}
+              `}>
+        {editMode ? (
+          <TextareaComponent
+            value={card.text}
+            textAreaRef={textArea}
+            handleKeyDownOnTextArea={handleKeyDownOnTextArea}
+            rows={1}
+          />
+        ) : (
+          card.text
+        )}
+      </div>
     </div>
   );
 };

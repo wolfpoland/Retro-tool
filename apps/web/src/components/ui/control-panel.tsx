@@ -23,7 +23,7 @@ export const ControlPanel: FC<ControlPanelProps> = ({
   onClick,
 }) => {
   return (
-    <div className="mb-1 flex w-24 items-center justify-between rounded-md border border-b-accent bg-card px-2 py-1">
+    <div className="mb-1 flex h-8 w-24 items-center justify-between rounded-md border border-b-accent bg-card px-2 py-1">
       {elements.map(({ node, index }, _index) => {
         return (
           <Fragment key={index}>

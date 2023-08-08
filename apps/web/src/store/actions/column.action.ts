@@ -12,6 +12,11 @@ export type ChangeCardOrderActionType = {
   card: Card;
 };
 
+export type PreviewChangeCardOrderActionType = {
+  overCard: Card;
+  card: Card;
+};
+
 export const createCardAction = createAction<Card>("column/createCard");
 
 export const removeCardAction = createAction<Card>("column/removeCard");
@@ -23,4 +28,10 @@ export const changeColumnAction = createAction<ChangeColumnActionType>(
 );
 export const changeCardOrderAction = createAction<ChangeCardOrderActionType>(
   "column/changeCardOrder"
+);
+export const addingPreviewAction =
+  createAction<PreviewChangeCardOrderActionType>("column/addingPreviewCard");
+
+export const addingPreviewSuccessAction = createAction<void>(
+  "column/addingPreviewSuccess"
 );
