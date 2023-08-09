@@ -56,7 +56,7 @@ export const ColumnComponent: FC<ColumnProps> = ({
 
   return (
     <div
-      className={cn(`flex h-full flex-col rounded-xl border bg-white
+      className={cn(`flex h-full flex-col justify-between rounded-xl border bg-white
           shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-slate-700/[.7]`)}>
       <div
         className={cn(
@@ -88,7 +88,7 @@ export const ColumnComponent: FC<ColumnProps> = ({
       </div>
 
       <div
-        className={cn(`h-[15vh] flex-none overflow-y-auto rounded-b-xl border-t bg-gray-100 px-4 py-3
+        className={cn(`h-[15vh] max-h-[100px] flex-none overflow-y-auto rounded-b-xl border-t bg-gray-100 px-4 py-3
          dark:border-gray-700 dark:bg-gray-800 md:px-5 md:py-4`)}>
         <TextareaComponent
           textAreaRef={textArea}

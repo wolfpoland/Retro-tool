@@ -20,6 +20,8 @@ import {
   addingPreviewSuccessAction,
   changeCardOrderAction,
   changeColumnAction,
+  ChangeColumnActionType,
+  editCardAction,
   setColumnsAction,
 } from "@/store/actions/column.action";
 import { cn } from "@/utils/util";
@@ -55,7 +57,6 @@ export type ColumnGridComponentProps = {
   onCardUpdate: (card: Card) => void;
 };
 // Rzeczy do zrobienia:
-// [] Dodac update column
 // [] Dodac position dla card
 
 export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
@@ -128,6 +129,27 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
         ...card,
       },
     });
+
+    store.dispatch(editCardAction(card));
+  };
+
+  const handleCardMove = (changeColumnActionType: ChangeColumnActionType) => {
+    const { card, dropColumnId } = changeColumnActionType;
+    onCardUpdate(
+      createCard({
+        ...card,
+        columnId: dropColumnId,
+      })
+    );
+
+    wsObserver?.emitMessage({
+      id: crypto.randomUUID(),
+      userId: "To implement",
+      type: "CARD_MOVE",
+      cargo: {
+        ...changeColumnActionType,
+      },
+    });
   };
 
   const onDragEnd = (event: DragEndEvent) => {
@@ -181,12 +203,10 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       })
     );
 
-    const updatedCard = createCard({
-      ...data.current.card,
-      columnId: dropColumnId,
+    handleCardMove({
+      card: data.current.card,
+      dropColumnId,
     });
-
-    handleCardEdit(updatedCard);
   };
 
   const onDragOver = (event: DragEndEvent) => {

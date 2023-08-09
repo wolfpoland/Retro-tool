@@ -37,6 +37,7 @@ export const CardComponent: FC<CardProps> = ({
     data: {
       card,
     },
+    disabled: editMode,
     // strategy: rectSwappingStrategy,
   });
 

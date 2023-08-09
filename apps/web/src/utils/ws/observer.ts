@@ -1,10 +1,11 @@
 import { Observable, Subject } from "rxjs";
+import { Transaction } from "../../../../../packages/types/transaction";
 
 export class Observer<T> {
   private message: Subject<any> = new Subject();
   private status: Subject<any> = new Subject();
 
-  public observeMessage(): Observable<T> {
+  public observeMessage(): Observable<Transaction<T>> {
     return this.message.asObservable();
   }
 
@@ -12,7 +13,7 @@ export class Observer<T> {
     return this.message.asObservable();
   }
 
-  public emitMessage(message: T) {
+  public emitMessage<E>(message: Transaction<E>) {
     this.message.next(message);
   }
 

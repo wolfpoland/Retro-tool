@@ -7,27 +7,34 @@ import { Card } from "../../../../packages/types/card";
 import { clientInterpreter } from "@/interpreter/interpreter";
 import { store } from "@/store/store";
 import { Provider } from "react-redux";
+import { unknown } from "zod";
 
 export type WsProps = {
   children: ReactNode;
 };
 export const WsObserverContext = createContext<Observer<
-  Transaction<Card>
+  Transaction<unknown>
 > | null>(null);
 
 export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
+  const wsId = useRef<string>(crypto.randomUUID());
   const ws = useRef(new WebSocket("ws://localhost:3900"));
   const destroy$ = useRef(new Subject<void>());
-  const writeObserver = useRef<Observer<Transaction<Card>>>(new Observer());
+  const writeObserver = useRef<Observer<Transaction<unknown>>>(new Observer());
 
   useEffect(() => {
     ws.current.onopen = () => {
       console.log("Opened connection !");
-      handleWsWrites(ws.current, writeObserver.current, destroy$.current);
+      handleWsWrites(
+        ws.current,
+        writeObserver.current,
+        destroy$.current,
+        wsId.current
+      );
     };
 
     ws.current.addEventListener("message", (message) => {
-      clientInterpreter(JSON.parse(message.data));
+      handleWsReads(message, wsId.current);
     });
 
     ws.current.onclose = () => {};
@@ -48,12 +55,15 @@ export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
   );
 };
 
-function handleWsReads(ws: WebSocket): void {}
+function handleWsReads(message: MessageEvent<any>, currentWsId: string): void {
+  clientInterpreter(JSON.parse(message.data), currentWsId);
+}
 
 function handleWsWrites(
   ws: WebSocket,
-  wsObserve: Observer<Transaction<Card>> | null,
-  destroy$: Subject<void>
+  wsObserve: Observer<Transaction<unknown>> | null,
+  destroy$: Subject<void>,
+  wsId: string
 ): void {
   if (!wsObserve) {
     throw new Error("Observer is not defined");
@@ -62,7 +72,7 @@ function handleWsWrites(
   wsObserve
     .observeMessage()
     .pipe(takeUntil(destroy$))
-    .subscribe((message: Transaction<Card>) => {
-      ws.send(JSON.stringify(message));
+    .subscribe((message: Transaction<unknown>) => {
+      ws.send(JSON.stringify({ ...message, wsId }));
     });
 }

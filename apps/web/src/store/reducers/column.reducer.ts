@@ -1,18 +1,18 @@
 "use client";
-import { createReducer, current } from "@reduxjs/toolkit";
+import { createReducer } from "@reduxjs/toolkit";
 import {
+  addingPreviewAction,
+  addingPreviewSuccessAction,
   changeCardOrderAction,
   changeColumnAction,
   createCardAction,
   editCardAction,
-  addingPreviewAction,
   removeCardAction,
   setColumnsAction,
-  addingPreviewSuccessAction,
 } from "@/store/actions/column.action";
 import { Card, createCard } from "../../../../../packages/types/card";
 import { ColumnMap } from "@/components/column/column-grid";
-import { arrayMove, arraySwap } from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 
 type ColumnState = {
   columnMap: ColumnMap;
@@ -65,17 +65,19 @@ export const columnReducer = createReducer(initialState, (builder) => {
     });
   });
 
-  // builder.addCase(previewChangeCardOrderAction, (state, action) => {});
-
   builder.addCase(changeColumnAction, (state, action) => {
     const card: Card = action.payload.card;
     const column = state.columnMap[card.columnId];
+    const newCard = createCard({
+      ...card,
+      columnId: action.payload.dropColumnId,
+    });
 
     column.card = column.card.filter((stateCard) => {
       return stateCard.id !== card.id;
     });
 
-    state.columnMap[action.payload.dropColumnId].card.push(card);
+    state.columnMap[action.payload.dropColumnId].card.push(newCard);
   });
 
   builder.addCase(changeCardOrderAction, (state, action) => {
@@ -118,12 +120,7 @@ export const columnReducer = createReducer(initialState, (builder) => {
     }
 
     const card = state.previewCard;
-    // const previewColumn = state.columnMap[state.previewColumnId];
     const originalColumn = state.columnMap[card.columnId];
-
-    // previewColumn.card = previewColumn.card.filter((stateCard) => {
-    //   return stateCard.id !== card.id;
-    // });
 
     originalColumn.card = originalColumn.card.filter((stateCard) => {
       return stateCard.id !== card.id;

@@ -3,6 +3,7 @@ import { newCard } from "./handlers/new-card";
 import { Card, createCard } from "../../../packages/types/card";
 import { removeCard } from "./handlers/remove-card";
 import { editCard } from "./handlers/edit-card";
+import { broadcaster } from "../index";
 
 // implement zod here
 export class MessageInterpreter {
@@ -33,7 +34,8 @@ export class MessageInterpreter {
       }
 
       default: {
-        throw new Error("Message type unknown");
+        broadcaster.emitMessage(transaction);
+        // throw new Error("Message type unknown");
       }
     }
   }
