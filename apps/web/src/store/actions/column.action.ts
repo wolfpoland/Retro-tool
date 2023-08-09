@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { Card } from "../../../../../packages/types/card";
-import { ColumnMap } from "@/components/column/column-grid";
+import { ColumnMap } from "@/components/column/column-grid/column-grid";
 
 export type ChangeColumnActionType = {
   dropColumnId: number;

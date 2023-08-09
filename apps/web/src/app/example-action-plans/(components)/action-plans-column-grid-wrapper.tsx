@@ -8,7 +8,7 @@ import { WsProvider } from "@/providers/ws";
 import {
   ColumnGridComponent,
   ColumnMap,
-} from "@/components/column/column-grid";
+} from "@/components/column/column-grid/column-grid";
 import { createColumn } from "../../../../../../packages/types/column";
 import { Card, createCard } from "../../../../../../packages/types/card";
 
@@ -88,6 +88,7 @@ const convertActionPlansToColumnMap = (
           id: actionPlan.id,
           text: actionPlan.text,
           columnId: todoColumn.id,
+          position: -1,
         }),
       ];
     }
@@ -99,6 +100,7 @@ const convertActionPlansToColumnMap = (
           id: actionPlan.id,
           text: actionPlan.text,
           columnId: inProgressColumn.id,
+          position: -1,
         }),
       ];
     }
@@ -110,6 +112,7 @@ const convertActionPlansToColumnMap = (
           id: actionPlan.id,
           text: actionPlan.text,
           columnId: doneColumn.id,
+          position: -1,
         }),
       ];
     }

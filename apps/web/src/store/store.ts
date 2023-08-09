@@ -1,9 +1,16 @@
-import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import { columnReducer } from "@/store/reducers/column.reducer";
+import {
+  Action,
+  configureStore,
+  createListenerMiddleware,
+  ThunkAction,
+} from "@reduxjs/toolkit";
+import { columnReducer } from "@/store/reducers/column/column.reducer";
 import { workspaceReducer } from "@/store/reducers/wokrspace.reducer";
 import { workspaceApi } from "@/store/api/workspace.api";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { actionPlanReducer } from "@/store/reducers/action-plan.reducer";
+
+export const listenerMiddleware = createListenerMiddleware();
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +21,8 @@ export const store = configureStore({
   },
   // middleware: (getDefaultMiddleware) =>
   //   getDefaultMiddleware().concat(workspaceApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
 });
 
 setupListeners(store.dispatch);

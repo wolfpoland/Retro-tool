@@ -2,18 +2,20 @@
 import React, {
   FC,
   MutableRefObject,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { ColumnComponent } from "./column";
+import { ColumnComponent } from "../column";
 import { WsObserverContext } from "@/providers/ws";
 import { useSelector } from "react-redux";
 import {
   columnsSelector,
+  columnToUpdateSelector,
   previewSelector,
 } from "@/store/selectors/column.selector";
-import { Card, createCard } from "../../../../../packages/types/card";
+import { Card, createCard } from "../../../../../../packages/types/card";
 import { store } from "@/store/store";
 import {
   addingPreviewAction,
@@ -21,11 +23,13 @@ import {
   changeCardOrderAction,
   changeColumnAction,
   ChangeColumnActionType,
+  createCardAction,
   editCardAction,
+  removeCardAction,
   setColumnsAction,
 } from "@/store/actions/column.action";
 import { cn } from "@/utils/util";
-import { Column } from "../../../../../packages/types/column";
+import { Column } from "../../../../../../packages/types/column";
 import {
   closestCenter,
   defaultDropAnimationSideEffects,
@@ -41,6 +45,7 @@ import { DragEndEvent } from "@dnd-kit/core/dist/types";
 import { createPortal } from "react-dom";
 import { CardComponent } from "@/components/card";
 import { dndPortal } from "@/utils/dnd-portal";
+import { ClientCalls } from "@/client-calls";
 
 export type ColumnMap = {
   [key: string]: Column;
@@ -56,8 +61,6 @@ export type ColumnGridComponentProps = {
   onCardRemove: (id: number) => void;
   onCardUpdate: (card: Card) => void;
 };
-// Rzeczy do zrobienia:
-// [] Dodac position dla card
 
 export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   columnHash,
@@ -67,6 +70,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
 }) => {
   const wsObserver = useContext(WsObserverContext);
   const columns = useSelector(columnsSelector);
+  const columnToUpdate = useSelector(columnToUpdateSelector);
   const { previewColumnId, previewCard } = useSelector(previewSelector);
   const [getCard, setCard] = useState<Card | null>(null);
   const dropAnimationConfig: DropAnimation = {
@@ -84,6 +88,10 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     store.dispatch(setColumnsAction(columnHash));
   }, [columnHash]);
 
+  useEffect(() => {
+    columnToUpdate && ClientCalls.updateColumCardsPositions(columnToUpdate);
+  }, [columnToUpdate]);
+
   const handleCardAdd = async (
     text: string,
     columnName: string,
@@ -94,6 +102,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     const card = createCard({
       id,
       text,
+      position: columnHash[columnId].card.length - 1,
       columnId: columnId,
     });
 
@@ -103,6 +112,8 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       type: "NEW_CARD",
       cargo: card,
     });
+
+    store.dispatch(createCardAction(card));
   };
 
   const handleCardRemove = (card: Card) => {
@@ -116,6 +127,8 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
         ...card,
       },
     });
+
+    store.dispatch(removeCardAction(card));
   };
 
   const handleCardEdit = (card: Card) => {

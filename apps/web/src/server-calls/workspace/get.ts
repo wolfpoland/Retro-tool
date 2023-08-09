@@ -4,7 +4,9 @@ import {
   createWorkspace,
   Workspace,
 } from "../../../../../packages/types/workspace";
-import { ColumnMap } from "@/components/column/column-grid";
+import { ColumnMap } from "@/components/column/column-grid/column-grid";
+import { Card, createCard } from "../../../../../packages/types/card";
+import { createColumn } from "../../../../../packages/types/column";
 
 function getWorkspaceRedisKey(workspaceId: string): string {
   return `workspace:${workspaceId}`;
@@ -52,9 +54,14 @@ export async function getWorkspaceWithColumMap(workspaceId: string) {
   }
 
   const columnMap = workspace.column.reduce((acc, column) => {
+    const createdColumn = createColumn({
+      ...column,
+      card: sortCards(column.card),
+    });
+
     return {
       ...acc,
-      [column.id]: column,
+      [column.id]: createdColumn,
     };
   }, {});
 
@@ -62,4 +69,18 @@ export async function getWorkspaceWithColumMap(workspaceId: string) {
     columnMap,
     workspace,
   };
+}
+
+function sortCards(cards: Array<Card>) {
+  const isNotPositioned = cards.some((card) => card.position === -1);
+
+  return isNotPositioned
+    ? cards
+        .sort((a, b) => a.position - b.position)
+        .map((card: Card, index: number) => {
+          return card.position === -1
+            ? createCard({ ...card, position: index })
+            : card;
+        })
+    : cards;
 }

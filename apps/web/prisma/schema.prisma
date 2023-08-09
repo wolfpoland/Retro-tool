@@ -13,12 +13,12 @@ datasource db {
 }
 
 model Workspace {
-  id     Int      @id @default(autoincrement())
-  name   String
-  status String @default("CREATING_CARDS")
-  column Column[]
-  createdAt DateTime @db.DateTime(0) @default(now())
-  updatedAt DateTime @db.DateTime(0) @default(now())
+  id        Int      @id @default(autoincrement())
+  name      String
+  status    String   @default("CREATING_CARDS")
+  column    Column[]
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @db.DateTime(0)
 }
 
 model Column {
@@ -30,18 +30,19 @@ model Column {
 }
 
 model Card {
-  id         Int     @id @default(autoincrement())
-  text       String
-  Column     Column? @relation(fields: [columnId], references: [id])
-  columnId   Int?
+  id        Int     @id @default(autoincrement())
+  text      String
+  position Int     @default(-1)
+  Column    Column? @relation(fields: [columnId], references: [id])
+  columnId  Int?
 }
 
 model ActionPlan {
-  id         Int     @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   text       String
   percentage Int
-  assignee    String  @default("unassigned")
-  status     String  @default("TODO")
-  createdAt  DateTime @db.DateTime(0) @default(now())
-  updatedAt  DateTime @db.DateTime(0) @default(now())
+  assignee   String   @default("unassigned")
+  status     String   @default("TODO")
+  createdAt  DateTime @default(now()) @db.DateTime(0)
+  updatedAt  DateTime @default(now()) @db.DateTime(0)
 }

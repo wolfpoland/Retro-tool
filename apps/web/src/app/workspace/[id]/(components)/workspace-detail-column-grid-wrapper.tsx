@@ -2,7 +2,7 @@
 import {
   ColumnGridComponent,
   ColumnMap,
-} from "@/components/column/column-grid";
+} from "@/components/column/column-grid/column-grid";
 import { ClientCalls } from "@/client-calls";
 import { Card } from "../../../../../../../packages/types/card";
 import { FC } from "react";

@@ -5,6 +5,7 @@ import { editWorkspace } from "@/client-calls/workspace/edit";
 import { addActionPlan } from "@/client-calls/action-plan/add";
 import { editActionPlan } from "@/client-calls/action-plan/edit";
 import { deleteActionPlan } from "@/client-calls/action-plan/delete";
+import { updateColumCardsPositions } from "@/client-calls/column/update-colum-cards-positions";
 
 export const ClientCalls = {
   addCard,
@@ -16,4 +17,5 @@ export const ClientCalls = {
   addActionPlan,
   editActionPlan,
   deleteActionPlan,
+  updateColumCardsPositions,
 };
