@@ -30,11 +30,11 @@ model Column {
 }
 
 model Card {
-  id        Int     @id @default(autoincrement())
-  text      String
+  id       Int     @id @default(autoincrement())
+  text     String
   position Int     @default(-1)
-  Column    Column? @relation(fields: [columnId], references: [id])
-  columnId  Int?
+  Column   Column? @relation(fields: [columnId], references: [id])
+  columnId Int?
 }
 
 model ActionPlan {
@@ -45,4 +45,13 @@ model ActionPlan {
   status     String   @default("TODO")
   createdAt  DateTime @default(now()) @db.DateTime(0)
   updatedAt  DateTime @default(now()) @db.DateTime(0)
+}
+
+model User {
+  id         Int    @id @default(autoincrement())
+  externalId String @unique
+  name       String
+  email      String @unique
+  avatar     String
+  password   String @default("")
 }

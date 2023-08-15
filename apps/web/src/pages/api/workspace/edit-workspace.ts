@@ -1,12 +1,15 @@
 import prisma from "@/utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Workspace } from "../../../../../../packages/types/workspace";
+import { checkSession } from "@/pages/api/(utils)/server-session";
 
 export default async function editWorkspace(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
+    checkSession(res);
+
     const rawWorkspace = await saveToDatabase(req.body);
     res.status(200).json({ ...rawWorkspace });
   } else {

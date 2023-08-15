@@ -1,12 +1,15 @@
 import prisma from "@/utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
+import { checkSession } from "@/pages/api/(utils)/server-session";
 
 export default async function addCard(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST" || !req?.body?.name) {
+    checkSession(res);
+
     const card = await saveToDatabase({
       text: req.body.text,
       columnId: parseInt(req.body.columnId),

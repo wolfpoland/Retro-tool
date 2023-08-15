@@ -1,11 +1,14 @@
 import prisma from "@/utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
+import { checkSession } from "@/pages/api/(utils)/server-session";
 
 export default async function addWorkspace(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST" || !req?.body?.name) {
+    checkSession(res);
+
     const rawWorkspace = await saveToDatabase(req.body);
     res.status(200).json({ ...rawWorkspace });
   } else {

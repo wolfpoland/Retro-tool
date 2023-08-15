@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { ActionPlanRaw } from "../../../../../../packages/types/action-plan";
 import prisma from "@/utils/prisma";
+import { checkSession } from "@/pages/api/(utils)/server-session";
 
 export default async function editActionPlan(
   req: NextApiRequest,
@@ -11,6 +12,8 @@ export default async function editActionPlan(
     if (req.method !== "POST") {
       throw new Error("Wrong method");
     }
+
+    checkSession(res);
 
     const actionPlan = await saveToDatabase(req.body);
 

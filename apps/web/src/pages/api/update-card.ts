@@ -2,12 +2,15 @@ import prisma from "@/utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { Card, createCard } from "../../../../../packages/types/card";
+import { checkSession } from "@/pages/api/(utils)/server-session";
 
 export default async function updateCard(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "PUT") {
+    checkSession(res);
+
     const card = await saveToDatabase(createCard(req.body));
     res.status(200).json({
       id: card.id,
