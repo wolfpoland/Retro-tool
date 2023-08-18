@@ -2,7 +2,6 @@
 import React, {
   FC,
   MutableRefObject,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -177,7 +176,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     if (
       currentOver &&
       currentOver["card"] &&
-      currentOver.card.id !== data.current.card.id &&
+      currentOver.card.id !== data.current?.card?.id &&
       currentOver.card.columnId === data.current.card.columnId
     ) {
       const card: Card = currentOver.card;

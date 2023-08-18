@@ -13,7 +13,7 @@ export default async function deleteActionPlan(
       throw new Error("Wrong method");
     }
 
-    checkSession(res);
+    await checkSession(req, res);
 
     const { id } = await saveToDatabase(req.body);
 

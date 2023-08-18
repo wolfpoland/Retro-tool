@@ -13,7 +13,7 @@ export default async function addActionPlan(
       throw new Error("Wrong method");
     }
 
-    checkSession(res);
+    await checkSession(req, res);
 
     const actionPlan = await saveToDatabase(req.body);
 

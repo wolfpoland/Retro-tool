@@ -8,7 +8,7 @@ export default async function deleteCard(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    checkSession(res);
+    await checkSession(req, res);
 
     const card = await saveToDatabase({
       id: parseInt(req.body.id),

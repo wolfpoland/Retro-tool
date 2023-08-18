@@ -1,6 +1,8 @@
 import prisma from "@/utils/prisma";
-import { redisConnector } from "@/redis-connector";
-import { createActionPlan } from "../../../../../packages/types/action-plan";
+import {
+  ActionPlanStatus,
+  createActionPlan,
+} from "../../../../../packages/types/action-plan";
 
 // TODO
 function getActionPlanRedisKey(id: number): string {
@@ -29,7 +31,7 @@ export async function getActionPlans() {
       updatedAt: actionPlan.updatedAt.toString(),
       percentage: actionPlan.percentage,
       text: actionPlan.text,
-      status: actionPlan.status,
+      status: actionPlan.status as ActionPlanStatus,
       assignee: actionPlan.assignee,
     });
   });

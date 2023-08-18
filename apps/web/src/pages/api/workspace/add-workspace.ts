@@ -7,7 +7,7 @@ export default async function addWorkspace(
   res: NextApiResponse
 ) {
   if (req.method === "POST" || !req?.body?.name) {
-    checkSession(res);
+    await checkSession(req, res);
 
     const rawWorkspace = await saveToDatabase(req.body);
     res.status(200).json({ ...rawWorkspace });

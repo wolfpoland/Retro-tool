@@ -10,7 +10,7 @@ export const columns: ColumnDef<Workspace>[] = [
     header: "Name",
     cell: ({ row }) => {
       return (
-        <Link href={`main/workspace/${row.original.id}`}>
+        <Link href={`/main/workspace/${row.original.id}`}>
           {row.original.name}
         </Link>
       );

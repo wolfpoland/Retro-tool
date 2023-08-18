@@ -61,8 +61,6 @@ export const authOptions: AuthOptions = {
       return true; // Do different verification for other providers that don't have `email_verified`
     },
     async session(params) {
-      console.log(params);
-
       if (!params.token.id) {
         throw new Error("Token id not found");
       }

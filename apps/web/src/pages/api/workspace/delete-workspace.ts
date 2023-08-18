@@ -7,7 +7,7 @@ export default async function deleteWorkspace(
   res: NextApiResponse
 ) {
   if (req.method === "POST" || !req?.body?.id) {
-    checkSession(res);
+    await checkSession(req, res);
 
     await saveToDatabase(req.body);
     res.status(200).json({ message: "Removed" });

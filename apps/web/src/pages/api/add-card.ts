@@ -8,7 +8,7 @@ export default async function addCard(
   res: NextApiResponse
 ) {
   if (req.method === "POST" || !req?.body?.name) {
-    checkSession(res);
+    await checkSession(req, res);
 
     const card = await saveToDatabase({
       text: req.body.text,

@@ -1,18 +1,11 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { NextApiResponse } from "next";
-import { redirect } from "next/navigation";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export async function checkSession(res: NextApiResponse) {
-  try {
-    const session = await getServerSession(authOptions);
+export async function checkSession(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession(req, res, authOptions);
 
-    if (!session) {
-      res.status(401).json({ message: "Unauthorized" });
-      redirect("/auth/sign-in");
-    }
-  } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
-    redirect("/auth/sign-in");
+  if (!session) {
+    res.status(401).redirect("/auth/sign-in");
   }
 }

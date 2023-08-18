@@ -1,7 +1,9 @@
+"use server";
 import prisma from "@/utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
 import { Card, createCard } from "../../../../../packages/types/card";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { checkSession } from "@/pages/api/(utils)/server-session";
 
 export default async function updateCard(
@@ -9,7 +11,7 @@ export default async function updateCard(
   res: NextApiResponse
 ) {
   if (req.method === "PUT") {
-    checkSession(res);
+    await checkSession(req, res);
 
     const card = await saveToDatabase(createCard(req.body));
     res.status(200).json({
