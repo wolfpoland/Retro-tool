@@ -12,11 +12,10 @@ import {
 
 export function clientInterpreter(
   transaction: Transaction<unknown>,
-  currentWsId: string
+  currentWsId: string,
+  channelId: number
 ) {
-  console.log("transaction", transaction);
-  if (transaction.wsId === currentWsId) {
-    console.log("transaction cancelded");
+  if (transaction.wsId === currentWsId || transaction.channelId !== channelId) {
     return;
   }
 

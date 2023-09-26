@@ -34,7 +34,7 @@ export class MessageInterpreter {
       }
 
       default: {
-        broadcaster.emitMessage(transaction);
+        broadcaster.emitTransaction(transaction);
         // throw new Error("Message type unknown");
       }
     }

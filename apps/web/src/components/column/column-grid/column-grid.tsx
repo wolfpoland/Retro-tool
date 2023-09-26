@@ -45,6 +45,7 @@ import { createPortal } from "react-dom";
 import { CardComponent } from "@/components/card";
 import { dndPortal } from "@/utils/dnd-portal";
 import { ClientCalls } from "@/client-calls";
+import { useSession } from "next-auth/react";
 
 export type ColumnMap = {
   [key: string]: Column;
@@ -67,6 +68,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   onCardRemove,
   onCardUpdate,
 }) => {
+  const session = useSession();
   const wsObserver = useContext(WsObserverContext);
   const columns = useSelector(columnsSelector);
   const columnToUpdate = useSelector(columnToUpdateSelector);
@@ -109,6 +111,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       id: crypto.randomUUID(),
       userId: "To implement",
       type: "NEW_CARD",
+      token: session.data?.token,
       cargo: card,
     });
 
@@ -122,6 +125,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       id: crypto.randomUUID(),
       userId: "To implement",
       type: "CARD_REMOVE",
+      token: session.data?.token,
       cargo: {
         ...card,
       },
@@ -137,6 +141,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       id: crypto.randomUUID(),
       userId: "To implement",
       type: "CARD_EDIT",
+      token: session.data?.token,
       cargo: {
         ...card,
       },
@@ -157,6 +162,7 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     wsObserver?.emitMessage({
       id: crypto.randomUUID(),
       userId: "To implement",
+      token: session.data?.token,
       type: "CARD_MOVE",
       cargo: {
         ...changeColumnActionType,

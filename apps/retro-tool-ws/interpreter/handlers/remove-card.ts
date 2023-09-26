@@ -12,5 +12,5 @@ export async function removeCard(transaction: Transaction<Card>) {
 
   await redis.set("card", filteredCards);
 
-  broadcaster.emitMessage(transaction);
+  broadcaster.emitTransaction(transaction);
 }

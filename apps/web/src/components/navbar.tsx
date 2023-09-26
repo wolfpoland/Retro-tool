@@ -71,7 +71,7 @@ export const NavbarComponent: FC<NavbarProps> = ({ children }): JSX.Element => {
 
               <Link
                 className="flex items-center gap-x-2 font-semibold text-gray-500 hover:text-blue-600 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500 sm:my-6 sm:border-l sm:border-gray-300 sm:pl-6"
-                href="auth/sign-in">
+                href="/auth/sign-in">
                 <User2 />
                 Log in
               </Link>

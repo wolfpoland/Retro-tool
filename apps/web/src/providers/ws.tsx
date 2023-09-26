@@ -7,16 +7,22 @@ import { Card } from "../../../../packages/types/card";
 import { clientInterpreter } from "@/interpreter/interpreter";
 import { store } from "@/store/store";
 import { Provider } from "react-redux";
-import { unknown } from "zod";
+import { number, unknown } from "zod";
+import { useSession } from "next-auth/react";
 
 export type WsProps = {
+  channelId: number;
   children: ReactNode;
 };
 export const WsObserverContext = createContext<Observer<
   Transaction<unknown>
 > | null>(null);
 
-export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
+export const WsProvider: FC<WsProps> = ({
+  channelId,
+  children,
+}): JSX.Element => {
+  const { data } = useSession();
   const wsId = useRef<string>(crypto.randomUUID());
   const ws = useRef(new WebSocket("ws://localhost:3900"));
   const destroy$ = useRef(new Subject<void>());
@@ -25,16 +31,19 @@ export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
   useEffect(() => {
     ws.current.onopen = () => {
       console.log("Opened connection !");
+      console.log("session data");
+      // console.log("token", data?.token);
       handleWsWrites(
         ws.current,
         writeObserver.current,
         destroy$.current,
-        wsId.current
+        wsId.current,
+        channelId
       );
     };
 
     ws.current.addEventListener("message", (message) => {
-      handleWsReads(message, wsId.current);
+      handleWsReads(message, wsId.current, channelId);
     });
 
     ws.current.onclose = () => {};
@@ -44,6 +53,7 @@ export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
       writeObserver.current.destroy();
     };
   }, []);
+
   return (
     <>
       <Provider store={store}>
@@ -55,15 +65,20 @@ export const WsProvider: FC<WsProps> = ({ children }): JSX.Element => {
   );
 };
 
-function handleWsReads(message: MessageEvent<any>, currentWsId: string): void {
-  clientInterpreter(JSON.parse(message.data), currentWsId);
+function handleWsReads(
+  message: MessageEvent<any>,
+  currentWsId: string,
+  channelId: number
+): void {
+  clientInterpreter(JSON.parse(message.data), currentWsId, channelId);
 }
 
 function handleWsWrites(
   ws: WebSocket,
   wsObserve: Observer<Transaction<unknown>> | null,
   destroy$: Subject<void>,
-  wsId: string
+  wsId: string,
+  channelId: number
 ): void {
   if (!wsObserve) {
     throw new Error("Observer is not defined");
@@ -73,6 +88,6 @@ function handleWsWrites(
     .observeMessage()
     .pipe(takeUntil(destroy$))
     .subscribe((message: Transaction<unknown>) => {
-      ws.send(JSON.stringify({ ...message, wsId }));
+      ws.send(JSON.stringify({ ...message, wsId, channelId }));
     });
 }

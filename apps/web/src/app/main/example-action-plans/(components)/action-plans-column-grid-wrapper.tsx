@@ -40,7 +40,7 @@ export const ActionPlansColumnGridWrapper: FC<ActionPlansColumnGridWrapper> = ({
   }, [actionPlans]);
 
   return (
-    <WsProvider>
+    <WsProvider channelId={0}>
       <ColumnGridComponent
         onCardAdd={onCardAdd}
         onCardUpdate={onCardUpdate}

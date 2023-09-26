@@ -1,0 +1,17 @@
+{
+  "name": "database",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@prisma/client": "4.14.1"
+  },
+  "devDependencies": {
+    "prisma": "^5.0.0",
+    "typescript": "^5.0.4"
+  },
+  "main": "./dist/index.js",
+  "types": "./index.ts"
+}

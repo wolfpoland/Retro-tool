@@ -1,5 +1,4 @@
 import { WsProvider } from "@/providers/ws";
-import { StatusNavbarComponent } from "@/components/status/status-navbar";
 import { ServerCalls } from "@/server-calls";
 import { GetWorkspace } from "@/server-calls/workspace/get";
 import { WorkspaceDetailColumnGridWrapper } from "@/app/main/workspace/[id]/(components)/workspace-detail-column-grid-wrapper";
@@ -13,7 +12,7 @@ export default async function WorkspaceDetail({
     (await ServerCalls.getWorkspaceColumnHash(params.id)) as GetWorkspace;
 
   return (
-    <WsProvider>
+    <WsProvider channelId={workspace.id}>
       <WorkspaceDetailColumnGridWrapper columnMap={columnMap} />
       {/*<StatusNavbarComponent*/}
       {/*  position="LEFT"*/}

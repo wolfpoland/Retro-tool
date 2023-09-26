@@ -1,18 +1,16 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { SessionStrategy } from "next-auth/src/core/types";
 import { AuthOptions } from "next-auth/src";
 import { AuthService } from "@/pages/api/auth/(services)/auth.service";
 import prisma from "@/utils/prisma";
-import { User } from "@prisma/client";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Adapter } from "next-auth/adapters";
 
 export const authService = new AuthService(prisma);
 
 export const authOptions: AuthOptions = {
-  session: {
-    strategy: "jwt" as SessionStrategy,
-  },
+  adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID ?? "",
@@ -45,38 +43,30 @@ export const authOptions: AuthOptions = {
         return false;
       }
 
-      if (account.provider === "google") {
-        const userId = user.id;
-        const userPrisma: User | null = await authService.getUser(userId);
-
-        if (!userPrisma) {
-          authService.createUserFromExternalProvider({
-            externalId: userId,
-            avatar: user.image,
-            name: user.name,
-            email: user.email ?? "",
-          });
-        }
-      }
       return true; // Do different verification for other providers that don't have `email_verified`
     },
     async session(params) {
-      if (!params.token.id) {
-        throw new Error("Token id not found");
-      }
+      const userId = params.user.id;
 
-      const user: User | null = await authService.getUser(
-        params.token.id as string
-      );
+      const user = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          sessions: true,
+        },
+      });
 
       if (!user) {
         throw new Error("User not found");
       }
 
+      const token = user.sessions[0].sessionToken;
+
       return {
         user: params.session.user,
         expires: params.session.expires,
-        token: params.token,
+        token,
       };
     },
     async jwt(params) {
