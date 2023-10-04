@@ -14,7 +14,7 @@ export type ControlPanelElement = {
 export type ControlPanelProps = {
   selectedControlPanelIndex?: ControlPanelIndex;
   elements: Array<ControlPanelElement>;
-  onClick?: (key: ControlPanelIndex) => void;
+  onClick?: (key: string) => void;
 };
 
 export const ControlPanel: FC<ControlPanelProps> = ({
@@ -33,7 +33,11 @@ export const ControlPanel: FC<ControlPanelProps> = ({
                   ? "rounded-md bg-muted text-muted-foreground"
                   : ""
               }
-              onClick={() => onClick && onClick(index as ControlPanelIndex)}
+              onClick={() => {
+                console.log("on control panel click", index);
+
+                onClick && onClick(index as ControlPanelIndex);
+              }}
               key={index}>
               {node}
             </div>

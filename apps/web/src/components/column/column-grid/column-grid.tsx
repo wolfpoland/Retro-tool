@@ -83,7 +83,13 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       },
     }),
   };
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   useEffect(() => {
     store.dispatch(setColumnsAction(columnHash));
@@ -256,8 +262,10 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   const onDragStart = (event: DragStartEvent) => {
+    console.log("event", event);
     const data: MutableRefObject<{ card: Card }> = event.active
       .data as MutableRefObject<{ card: Card }>;
+
     setCard(data.current.card);
   };
 

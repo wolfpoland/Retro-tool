@@ -16,8 +16,7 @@ export const IconWrapper: FC<IconWrapperProps> = ({
       className={`${
         className ?? ""
       } flex h-[30px] w-[30px] cursor-pointer items-center justify-center
-       rounded-full p-1.5 hover:bg-gray-600`}
-      onClick={onIconClick}>
+       rounded-full p-1.5 hover:bg-gray-600`}>
       {children}
     </div>
   );

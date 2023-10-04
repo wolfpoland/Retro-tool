@@ -1,12 +1,20 @@
 import React, { FC, ReactNode } from "react";
 import Link from "next/link";
 import { User2 } from "lucide-react";
+import { Session } from "next-auth/src";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ProfileComponent } from "@/components/navbar/profile";
 
 type NavbarProps = {
+  session: Session | null;
   children: ReactNode;
 };
 
-export const NavbarComponent: FC<NavbarProps> = ({ children }): JSX.Element => {
+export const NavbarComponent: FC<NavbarProps> = ({
+  children,
+  session,
+}): JSX.Element => {
   return (
     <>
       <header
@@ -68,13 +76,16 @@ export const NavbarComponent: FC<NavbarProps> = ({ children }): JSX.Element => {
                 aria-current="page">
                 Example Action Plans
               </Link>
-
-              <Link
-                className="flex items-center gap-x-2 font-semibold text-gray-500 hover:text-blue-600 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500 sm:my-6 sm:border-l sm:border-gray-300 sm:pl-6"
-                href="/auth/sign-in">
-                <User2 />
-                Log in
-              </Link>
+              {session?.user ? (
+                <ProfileComponent session={session} />
+              ) : (
+                <Link
+                  className="flex items-center gap-x-2 font-semibold text-gray-500 hover:text-blue-600 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500 sm:my-6 sm:border-l sm:border-gray-300 sm:pl-6"
+                  href="/auth/sign-in">
+                  <User2 />
+                  Log in
+                </Link>
+              )}
             </div>
           </div>
         </nav>

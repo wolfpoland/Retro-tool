@@ -16,6 +16,11 @@ export type CardProps = {
   onCardEdit?: (card: Card) => void;
 };
 
+enum ControlPanelAction {
+  EDIT = "EDIT",
+  REMOVE = "REMOVE",
+}
+
 export const CardComponent: FC<CardProps> = ({
   card,
   onCardRemove,
@@ -38,7 +43,6 @@ export const CardComponent: FC<CardProps> = ({
       card,
     },
     disabled: editMode,
-    // strategy: rectSwappingStrategy,
   });
 
   const handleMouseOver = () => {
@@ -55,6 +59,16 @@ export const CardComponent: FC<CardProps> = ({
 
   const handleEditOnClick = () => {
     setEditMode(true);
+  };
+
+  const onControlPanelClick = (key: ControlPanelAction | string) => {
+    console.log("onControlPanelClick");
+    switch (key) {
+      case ControlPanelAction.EDIT:
+        return handleEditOnClick();
+      case ControlPanelAction.REMOVE:
+        return handleRemoveOnClick();
+    }
   };
 
   const handleKeyDownOnTextArea = (
@@ -89,43 +103,23 @@ export const CardComponent: FC<CardProps> = ({
 
   const elements: Array<ControlPanelElement> = [
     {
-      node: (
-        <IconComponent
-          key={0}
-          iconType={RxPencil1}
-          onIconClick={handleEditOnClick}
-        />
-      ),
-      index: "0",
+      node: <IconComponent key={0} iconType={RxPencil1} />,
+      index: ControlPanelAction.EDIT,
     },
     {
-      node: (
-        <IconComponent
-          key={1}
-          iconType={RxTrash}
-          onIconClick={handleRemoveOnClick}
-        />
-      ),
-      index: "1",
+      node: <IconComponent key={1} iconType={RxTrash} />,
+      index: ControlPanelAction.REMOVE,
     },
   ];
 
   return (
     <div onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
-      {mouseOver && (
-        <motion.div
-          style={{ opacity: mouseOver ? 1 : 0 }}
-          transition={{ duration: 2 }}
-          className="flex items-center justify-end">
-          <ControlPanel elements={elements} />
-        </motion.div>
-      )}
       <div
         ref={setNodeRef}
         {...listeners}
         {...attributes}
         style={style}
-        className={`mb-4 flex flex-col rounded-xl border p-4
+        className={`mb-4 flex justify-between rounded-xl border p-4
               shadow-sm transition  duration-200 ease-in-out dark:border-gray-600 dark:text-gray-300
            md:p-5 ${styles}
               `}>
@@ -138,6 +132,14 @@ export const CardComponent: FC<CardProps> = ({
           />
         ) : (
           card.text
+        )}
+        {mouseOver && (
+          <motion.div
+            style={{ opacity: mouseOver ? 1 : 0 }}
+            transition={{ duration: 2 }}
+            className="flex items-center justify-end">
+            <ControlPanel onClick={onControlPanelClick} elements={elements} />
+          </motion.div>
         )}
       </div>
     </div>
