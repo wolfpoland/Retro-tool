@@ -10,8 +10,6 @@ export default async function AppLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  console.log("session", session);
-
   if (!session) {
     redirect("/auth/sign-in");
   }

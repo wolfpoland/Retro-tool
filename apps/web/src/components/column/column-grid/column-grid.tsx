@@ -57,7 +57,7 @@ export type ColumnGridComponentProps = {
     text: string,
     columnName: string,
     columnId: number
-  ) => Promise<number>;
+  ) => Promise<number | undefined>;
   onCardRemove: (id: number) => void;
   onCardUpdate: (card: Card) => void;
 };
@@ -105,6 +105,10 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
     columnId: number
   ) => {
     const id = await onCardAdd(text, columnName, columnId);
+
+    if (!id) {
+      return;
+    }
 
     const card = createCard({
       id,
@@ -262,7 +266,6 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
   };
 
   const onDragStart = (event: DragStartEvent) => {
-    console.log("event", event);
     const data: MutableRefObject<{ card: Card }> = event.active
       .data as MutableRefObject<{ card: Card }>;
 
@@ -295,11 +298,11 @@ export const ColumnGridComponent: FC<ColumnGridComponentProps> = ({
       <>
         <div
           className={cn(
-            "mx-auto h-[110vh] max-w-[85rem] px-4 py-2 sm:px-6 lg:px-8 lg:py-6"
+            "mx-auto h-[110vh] max-w-[85rem] px-4 pb-2 sm:px-6 lg:px-8 lg:pb-3"
           )}>
           <div
             className={cn(
-              "mt-12 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center"
+              "mt-6 grid h-[80vh] max-h-[80vh] gap-6 lg:grid-cols-3 lg:items-center"
             )}>
             {generatedColumns}
           </div>

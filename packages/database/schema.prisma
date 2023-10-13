@@ -12,13 +12,19 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
+enum WorkspacePhase {
+  REVISIT_ACTION_PLAN
+  CREATE
+  VOTE
+}
+
 model Workspace {
-  id        Int      @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   name      String
-  status    String   @default("CREATING_CARDS")
   column    Column[]
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @default(now()) @db.DateTime(0)
+  phase     WorkspacePhase @default(REVISIT_ACTION_PLAN)
+  createdAt DateTime       @default(now()) @db.DateTime(0)
+  updatedAt DateTime       @default(now()) @db.DateTime(0)
 }
 
 model Column {
@@ -42,7 +48,7 @@ model ActionPlan {
   text       String
   percentage Int
   assignee   String   @default("unassigned")
-  status     String   @default("TODO")
+  status    Int           @default(0)
   createdAt  DateTime @default(now()) @db.DateTime(0)
   updatedAt  DateTime @default(now()) @db.DateTime(0)
 }

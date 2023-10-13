@@ -3,7 +3,7 @@ import { ActionPlanRaw } from "../../../../../packages/types/action-plan";
 export async function editActionPlan(
   actionPlanRaw: ActionPlanRaw
 ): Promise<Response> {
-  const { id, text, percentage, assignee } = actionPlanRaw;
+  const { id, text, percentage, assignee, status } = actionPlanRaw;
 
   return await fetch(`/api/action-plan/edit`, {
     method: "POST",
@@ -14,6 +14,7 @@ export async function editActionPlan(
       id,
       text,
       percentage,
+      status,
       assignee,
     }),
   });

@@ -1,7 +1,9 @@
 "use client";
 import {
   ActionPlan,
+  ActionPlanRaw,
   ActionPlanStatus,
+  createActionPlan,
 } from "../../../../../../../packages/types/action-plan";
 import { FC, useEffect, useState } from "react";
 import { WsProvider } from "@/providers/ws";
@@ -11,6 +13,7 @@ import {
 } from "@/components/column/column-grid/column-grid";
 import { createColumn } from "../../../../../../../packages/types/column";
 import { Card, createCard } from "../../../../../../../packages/types/card";
+import { ClientCalls } from "@/client-calls";
 
 export type ActionPlansColumnGridWrapper = {
   actionPlans: ActionPlan[];
@@ -25,13 +28,33 @@ export const ActionPlansColumnGridWrapper: FC<ActionPlansColumnGridWrapper> = ({
     text: string,
     columnName: string,
     columnId: number
-  ) => {
-    return 0;
+  ): Promise<number | undefined> => {
+    const actionPlan = await ClientCalls.addActionPlan(
+      createActionPlan({
+        text,
+        status: columnId,
+      })
+    );
+
+    return actionPlan.id;
   };
 
-  const onCardRemove = (id: number) => {};
+  const onCardRemove = (id: number) => {
+    ClientCalls.deleteActionPlan(id);
+  };
 
-  const onCardUpdate = (card: Card) => {};
+  const onCardUpdate = (card: Card) => {
+    const actionPlan = actionPlans.find(
+      (actionPlan) => actionPlan.id === card.id
+    );
+
+    ClientCalls.editActionPlan({
+      ...actionPlan,
+      id: card.id,
+      text: card.text,
+      status: card.columnId,
+    });
+  };
 
   useEffect(() => {
     const convertedActionPlans = convertActionPlansToColumnMap(actionPlans);
@@ -81,7 +104,7 @@ const convertActionPlansToColumnMap = (
     const inProgressColumn = columnMap[ActionPlanStatus.IN_PROGRESS];
     const doneColumn = columnMap[ActionPlanStatus.DONE];
 
-    if (actionPlan.status === "TODO") {
+    if (actionPlan.status === ActionPlanStatus.TODO) {
       todoColumn.card = [
         ...todoColumn.card,
         createCard({
@@ -93,7 +116,7 @@ const convertActionPlansToColumnMap = (
       ];
     }
 
-    if (actionPlan.status === "IN_PROGRESS") {
+    if (actionPlan.status === ActionPlanStatus.IN_PROGRESS) {
       inProgressColumn.card = [
         ...inProgressColumn.card,
         createCard({
@@ -105,7 +128,7 @@ const convertActionPlansToColumnMap = (
       ];
     }
 
-    if (actionPlan.status === "DONE") {
+    if (actionPlan.status === ActionPlanStatus.DONE) {
       doneColumn.card = [
         ...doneColumn.card,
         createCard({

@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { ActionPlanRaw } from "../../../../../../packages/types/action-plan";
+import {
+  ActionPlanRaw,
+  ActionPlanSchema,
+} from "../../../../../../packages/types/action-plan";
 import prisma from "@/utils/prisma";
 import { checkSession } from "@/pages/api/(utils)/server-session";
 
@@ -24,19 +27,23 @@ export default async function addActionPlan(
 }
 
 async function saveToDatabase(actionPlanRaw: ActionPlanRaw) {
-  const schema = z.object({
-    text: z.string(),
-    percentage: z.number(),
-    assignee: z.string(),
-  });
-
-  const data = schema.parse(actionPlanRaw);
+  const data = ActionPlanSchema.parse(actionPlanRaw);
 
   return await prisma.actionPlan.create({
+    select: {
+      id: true,
+      text: true,
+      percentage: true,
+      assignee: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     data: {
       text: data.text,
       percentage: data.percentage,
       assignee: data.assignee,
+      status: data.status,
     },
   });
 }

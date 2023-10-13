@@ -1,5 +1,5 @@
 "use client";
-import { createReducer } from "@reduxjs/toolkit";
+import { createReducer, current } from "@reduxjs/toolkit";
 import {
   addingPreviewAction,
   addingPreviewSuccessAction,
@@ -80,6 +80,7 @@ export const columnReducer = createReducer(initialState, (builder) => {
   builder.addCase(changeColumnAction, (state, action) => {
     const card: Card = action.payload.card;
     const column = state.columnMap[card.columnId];
+
     const newCard = createCard({
       ...card,
       columnId: action.payload.dropColumnId,

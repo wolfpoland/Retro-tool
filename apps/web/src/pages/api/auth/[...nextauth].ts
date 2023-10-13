@@ -2,12 +2,9 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { AuthOptions } from "next-auth/src";
-import { AuthService } from "@/pages/api/auth/(services)/auth.service";
 import prisma from "@/utils/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
-
-export const authService = new AuthService(prisma);
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,

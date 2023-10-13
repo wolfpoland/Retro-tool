@@ -62,7 +62,6 @@ export const CardComponent: FC<CardProps> = ({
   };
 
   const onControlPanelClick = (key: ControlPanelAction | string) => {
-    console.log("onControlPanelClick");
     switch (key) {
       case ControlPanelAction.EDIT:
         return handleEditOnClick();
@@ -119,7 +118,7 @@ export const CardComponent: FC<CardProps> = ({
         {...listeners}
         {...attributes}
         style={style}
-        className={`mb-4 flex justify-between rounded-xl border p-4
+        className={`mb-4 flex justify-between gap-3 rounded-xl border p-4
               shadow-sm transition  duration-200 ease-in-out dark:border-gray-600 dark:text-gray-300
            md:p-5 ${styles}
               `}>

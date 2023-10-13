@@ -1,5 +1,6 @@
 "use client";
 import React, { FC, Fragment, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 export enum ControlPanelIndex {
   KANBAN = "KANBAN",
@@ -14,16 +15,23 @@ export type ControlPanelElement = {
 export type ControlPanelProps = {
   selectedControlPanelIndex?: ControlPanelIndex;
   elements: Array<ControlPanelElement>;
-  onClick?: (key: string) => void;
+  onClick?: (key: ControlPanelIndex) => void;
+  className?: string;
 };
 
 export const ControlPanel: FC<ControlPanelProps> = ({
   elements,
   selectedControlPanelIndex,
   onClick,
+  className,
 }) => {
   return (
-    <div className="mb-1 flex h-8 w-24 items-center justify-between rounded-md border border-b-accent bg-card px-2 py-1">
+    <div
+      className={cn(
+        `${
+          className ? className : ""
+        } flex h-8 w-24 items-center justify-between rounded-md border border-b-accent bg-card px-2 py-1`
+      )}>
       {elements.map(({ node, index }, _index) => {
         return (
           <Fragment key={index}>
@@ -34,8 +42,6 @@ export const ControlPanel: FC<ControlPanelProps> = ({
                   : ""
               }
               onClick={() => {
-                console.log("on control panel click", index);
-
                 onClick && onClick(index as ControlPanelIndex);
               }}
               key={index}>

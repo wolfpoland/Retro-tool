@@ -19,7 +19,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
       <div className="flex flex-col">
         <div className="-m-1.5 overflow-x-auto">
           <div className="inline-block min-w-full p-1.5 align-middle">
-            <div className="overflow-hidden rounded-xl border shadow-sm">
+            <div className="h-[80vh] overflow-hidden rounded-xl border shadow-sm">
               <div className="border-b border-b-accent bg-accent px-6 py-4 text-accent-foreground">
                 <div className="flex items-center justify-between">
                   <div>

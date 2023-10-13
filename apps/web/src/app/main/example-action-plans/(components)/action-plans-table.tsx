@@ -2,6 +2,7 @@
 import {
   ActionPlan,
   ActionPlanRaw,
+  createActionPlan,
 } from "../../../../../../../packages/types/action-plan";
 import { ClientCalls } from "@/client-calls";
 import { TableWrapper } from "@/components/table/ui/table-wrapper";
@@ -30,12 +31,10 @@ export const ActionPlansTable: FC<ActionPlansTableProps> = ({
     store.dispatch(setActionPlansAction(actionPlans));
   }, [actionPlans]);
 
-  const onAddActionPlan = (actionPlan: ActionPlanRaw) => {
-    ClientCalls.addActionPlan(actionPlan).then(async (response: Response) => {
-      const rawActionPlan = await response.json();
+  const onAddActionPlan = async (actionPlan: ActionPlanRaw) => {
+    const actionPlanRaw = await ClientCalls.addActionPlan(actionPlan);
 
-      store.dispatch(createActionPlanAction(rawActionPlan));
-    });
+    store.dispatch(createActionPlanAction(createActionPlan(actionPlanRaw)));
   };
 
   return (

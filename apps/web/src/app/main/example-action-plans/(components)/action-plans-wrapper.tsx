@@ -8,6 +8,7 @@ import { ControlPanel, ControlPanelIndex } from "@/components/ui/control-panel";
 import { IconWrapper } from "@/components/ui/icon-wrapper";
 import { KanbanSquare, Table } from "lucide-react";
 import { ActionPlansColumnGridWrapper } from "@/app/main/example-action-plans/(components)/action-plans-column-grid-wrapper";
+import { cn } from "@/lib/utils";
 
 export type ActionPlansTableProps = {
   actionPlans: ActionPlan[];
@@ -45,7 +46,20 @@ export const ActionPlansTableWrapper: FC<ActionPlansTableProps> = ({
 
   return (
     <Provider store={store}>
-      <div className="container mx-auto mt-3 flex items-center justify-end px-12">
+      <div
+        className={cn(
+          `${
+            controlPanelIndex === ControlPanelIndex.KANBAN
+              ? "justify-between"
+              : "justify-end"
+          } container mx-auto mt-3 flex items-center px-12 pt-14`
+        )}>
+        {controlPanelIndex === ControlPanelIndex.KANBAN && (
+          <div className={cn("px-4 text-xl font-semibold")}>
+            Action Plans
+            <p className="text-sm">Manage action plans of your team</p>
+          </div>
+        )}
         <ControlPanel
           selectedControlPanelIndex={controlPanelIndex}
           elements={elements}

@@ -65,14 +65,14 @@ export const NavbarComponent: FC<NavbarProps> = ({
             <div className="mt-5 flex flex-col gap-x-0 gap-y-4 sm:mt-0 sm:flex-row sm:items-center sm:justify-end sm:gap-x-7 sm:gap-y-0 sm:pl-7">
               <Link
                 className="font-semibold text-gray-400 hover:text-gray-500 sm:py-6"
-                href="main/workspace"
+                href="/main/workspace"
                 aria-current="page">
                 Workspace
               </Link>
 
               <Link
                 className="font-semibold text-gray-400 hover:text-gray-500 sm:py-6"
-                href="main/example-action-plans"
+                href="/main/example-action-plans"
                 aria-current="page">
                 Example Action Plans
               </Link>

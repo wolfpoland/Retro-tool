@@ -9,8 +9,8 @@ import { FC, MouseEventHandler, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AddActionPlanForm } from "@/app/main/example-action-plans/(components)/dialog/add/add-form";
 import {
-  ActionPlan,
   ActionPlanRaw,
+  ActionPlanStatus,
 } from "../../../../../../../../../packages/types/action-plan";
 
 export type AddActionPlanDialogProps = {
@@ -31,7 +31,10 @@ export const AddActionPlanDialog: FC<AddActionPlanDialogProps> = ({
 
   const onSubmitActionPlan = (actionPlan: ActionPlanRaw) => {
     setDialogOpen(false);
-    onAddActionPlan(actionPlan);
+    onAddActionPlan({
+      ...actionPlan,
+      status: ActionPlanStatus.TODO,
+    });
   };
 
   const onOpenChange = (open: boolean) => {
